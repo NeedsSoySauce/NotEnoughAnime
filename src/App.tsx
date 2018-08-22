@@ -1,22 +1,16 @@
 import * as React from 'react';
-import './App.css';
+import Search from './components/Search';
+import './css/stylesheet.css';
 
-import logo from './logo.svg';
-
-class App extends React.Component {
+// This renders a text field allowing the user to enter a league of legends in-game username, 
+// as well as a droptown to select that users region
+export default class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+          <h1 className="App-title">Home page</h1>
+          <Search />
       </div>
     );
   }
 }
-
-export default App;
