@@ -1,19 +1,24 @@
+import { TextField } from '@material-ui/core/';
 import * as React from 'react';
-
-import {TextField} from '@material-ui/core/';
 
 export default class Search extends React.Component<{}, {value: string}> {
 
-    public handleKeyDown(event: any) {
-        // Search for username with riot api
-        console.log(event.key)
+    public state: any = {
+        value: ""
+    }
+
+    public handleKeyDown = (event: any) => {
+        // If the user presses enter and all conditions to submit an api request are met, submit one
+        console.log(event.keyCode)
+        if (event.keyCode === 13) {
+            console.log(this.state.value)
+        }    
     }
 
     public handleChange = (event: any) => {
-        this.setState({
-            value: event.value,
+        this.setState({ 
+            value: event.target.value 
         });
-        console.log(this.state.value)
     }
 
     public render() {
@@ -22,10 +27,11 @@ export default class Search extends React.Component<{}, {value: string}> {
             <div>
                 <TextField 
                     autoFocus={true} 
-                    label="Summoner Name" 
-                    helperText="Enter a username"
+                    label="Label" 
+                    helperText="helperText"
+                    value={this.state.value}
                     onKeyDown={this.handleKeyDown}
-                    onChange={this.handleChange}
+                    onChange={(this.handleChange)}
                 />
             </div>
 
