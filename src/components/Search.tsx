@@ -1,5 +1,15 @@
-import { TextField } from '@material-ui/core/';
+import { Button, TextField } from '@material-ui/core/';
+import SearchIcon from '@material-ui/icons/Search';
 import * as React from 'react';
+
+/* function SearchButton(props: any) {
+    return (
+        <Button onClick={props.handleClick}>
+            Search
+            <SearchIcon/>
+        </Button>
+    )
+} */
 
 export default class Search extends React.Component<{}, {value: string}> {
 
@@ -7,11 +17,26 @@ export default class Search extends React.Component<{}, {value: string}> {
         value: ""
     }
 
+    public SubmitRequest = () => {
+        fetch(`https://api.jikan.moe/search/anime/${this.state.value}/1`)
+        .then(
+            (response: any) => { 
+                if (response.status !== 200) {
+                    console.log('statusCode', response.status)
+                    return
+                }
+                
+                response.json()
+                    .then(
+                        (data: any) => {
+                            console.log('data:', data)
+                    });
+        });
+    }
+
     public handleKeyDown = (event: any) => {
-        // If the user presses enter and all conditions to submit an api request are met, submit one
-        console.log(event.keyCode)
         if (event.keyCode === 13) {
-            console.log(this.state.value)
+            this.SubmitRequest();
         }    
     }
 
@@ -19,6 +44,10 @@ export default class Search extends React.Component<{}, {value: string}> {
         this.setState({ 
             value: event.target.value 
         });
+    }
+
+    public handleClick = () => {
+        this.SubmitRequest();
     }
 
     public render() {
@@ -31,8 +60,12 @@ export default class Search extends React.Component<{}, {value: string}> {
                     helperText="helperText"
                     value={this.state.value}
                     onKeyDown={this.handleKeyDown}
-                    onChange={(this.handleChange)}
+                    onChange={this.handleChange}
                 />
+                <Button onClick={this.handleClick}>
+                    Search
+                    <SearchIcon/>
+                </Button>
             </div>
 
         );
