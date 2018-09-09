@@ -23,21 +23,34 @@ export default class TileResults extends React.Component<ITileResultsProps> {
     }
 
     public createTiles = () => {
+
+        const tiles: any = [];
+
+        this.props.results.forEach((element: any) => {
+            tiles.push(
+                <InfoTile key={element.mal_id} result={element}/>
+            )
+        });
+
+        return (
+            <Grid
+                container={true}
+                justify="center"
+                direction="column"
+                alignItems="center"
+                spacing={16}
+                style={{paddingTop: 16}}
+            >               
+                {tiles}
+            </Grid>         
+        )
+
+    }
+
+    public render() {
         if (this.props.status === "fetched_results") {
-
-            const tiles: any = [];
-
-            this.props.results.forEach((element: any) => {
-                tiles.push(<Grid item={true} xs={8}><InfoTile key={element.mal_id} result={element}/></Grid>)
-            });
-
             return (
-                <Grid
-                    container={true}
-                    justify="center"
-                >               
-                    {tiles}
-                </Grid>         
+               this.createTiles()      
             )
 
         } else if (this.props.status === "fetching") {
@@ -61,11 +74,6 @@ export default class TileResults extends React.Component<ITileResultsProps> {
                 </div>
             )
         }
-    }
 
-    public render() {
-        return (
-            this.createTiles()
-        )
     }
 }
