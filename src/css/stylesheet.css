@@ -2,3 +2,5 @@
     font-family: roboto;
     padding: left;
   }
+
+html { overflow-x:auto; overflow-y:scroll; }
