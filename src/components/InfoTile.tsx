@@ -44,7 +44,7 @@ const styles = (theme: any) => console.log(theme) || ({
             width: "80%",
           },
         [theme.breakpoints.down('xs')]: {
-            width: "100%",
+            width: "60%",
           },
         cssFloat: "left",
         overflow: "visible",
