@@ -5,12 +5,15 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import withWidth from '@material-ui/core/withWidth';
 
 interface IInfoTileProps {
     key: any
     result: any
+    width: any
+    classes: any
 }
 
 interface IInfoTileStates {
@@ -18,7 +21,7 @@ interface IInfoTileStates {
     fullResult: any
 }
 
-const styles = {
+const styles = (theme: any) => ({
     Grid: {
         width: "100%",
     },
@@ -44,12 +47,12 @@ const styles = {
         backgroundColor: "green",
         overflow: "visible",
     },
-}
+})
 
 
 // InfoTile formats the information returned from the Jikan API into a short 
 // summary card which the user can click to expand and view more details
-export default class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
+class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
 
     constructor(props: IInfoTileProps) {
         super(props)
@@ -113,21 +116,27 @@ export default class InfoTile extends React.Component<IInfoTileProps, IInfoTileS
 
     public render() {
 
+        const classes = this.props.classes;
+        console.log(classes)
+        const width = this.props.width;
+
+        console.log(width)
+
         return ( 
 
-        <Grid item={true} xs={11} md={8} style={styles.Grid}>
-            <Paper style={styles.Paper}>
+        <Grid item={true} xs={11} md={8} className={classes.Grid}>
+            <Paper className={classes.Paper}>
                 
                 <Grid container={true}>
     
-                        <div style={styles.AvatarDiv}>
+                        <div className={classes.AvatarDiv}>
                             <Avatar
                                 src={this.props.result.image_url}
-                                style={styles.Avatar}
+                                className={classes.Avatar}
                             />
                         </div>                  
                         
-                        <div style={styles.DescriptionDiv}>
+                        <div className={classes.DescriptionDiv}>
                             <Typography variant="headline">
                                 {this.props.result.title}
                             </Typography>       
@@ -154,3 +163,5 @@ export default class InfoTile extends React.Component<IInfoTileProps, IInfoTileS
         )
     }
 }
+
+export default withStyles(styles)(withWidth()(InfoTile))
