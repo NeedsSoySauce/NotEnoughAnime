@@ -3,4 +3,8 @@
     padding: left;
   }
 
+* {
+    box-sizing: border-box;
+}
+
 html { overflow-x:auto; overflow-y:scroll; }

@@ -1,11 +1,9 @@
 import * as React from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 interface IInfoTileProps {
     key: any
@@ -17,10 +15,19 @@ interface IInfoTileStates {
     fullResult: any
 }
 
-const ButtonStyle = {
-    display: "flex", 
-    justifyContent: "center", 
-    alignItems: "flex-end", 
+const styles = {
+    Grid: {
+        width: "100%",
+    },
+    Paper: {
+        padding: 16,
+        height: 158,
+    },
+    Avatar: {
+        width: 90,
+        height: 126,
+        borderRadius: 10,
+    }
 }
 
 // InfoTile formats the information returned from the Jikan API into a short 
@@ -90,55 +97,27 @@ export default class InfoTile extends React.Component<IInfoTileProps, IInfoTileS
     public render() {
 
         return ( 
-            <Grid item={true} xs={8} style={{width: "100%"}}>
-                <Paper style={{padding: 16, borderRadius: 10}}>
-                    <Grid container={true}>
 
-                        <Grid item={true} xs={1}>
+        <Grid item={true} xs={11} sm={8} style={styles.Grid}>
+            <Paper style={styles.Paper}>
+                
+                <Grid container={true}>
+    
+                        <div style={{display: "inline-block"}}>
                             <Avatar
-                            alt={this.props.result.title} 
-                            src={this.props.result.image_url} 
-                            style={{borderRadius: 10, width: 90, height: 126}}
+                                src={this.props.result.image_url}
+                                style={styles.Avatar}
                             />
-                        </Grid>
+                        </div>                  
                         
-                        <Grid item={true} xs={6}>
-                            <Grid container={true} direction="column">
-                            
-                                <Grid item={true}>
-                                    <Typography variant="headline">
-                                        {this.props.result.title}                                
-                                        <Typography variant="body1">
-                                            {this.props.result.description}
-                                        </Typography>  
-                                    </Typography>
-                                </Grid>
+                        <div style={{display: "inline-block", backgroundColor: "red"}}>
+                            {this.props.result.description}
+                        </div> 
+                      
+                </Grid>
 
-                                <Grid item={true}>
-                                    <div style={ButtonStyle}>
-                                        <Button size="small" color="primary">
-                                            <Typography variant="button" color="inherit">
-                                                More info
-                                            </Typography>
-                                        </Button>
-                                    </div> 
-                                </Grid>
-
-                            </Grid>    
-                        </Grid>      
-
-                        <Grid container={true} xs={1} direction="column">
-                            <Typography variant="body2">
-                                Episodes: {this.props.result.episodes}                                    
-                            </Typography>  
-                            <Typography variant="body2">
-                                Type: {this.props.result.type}                                    
-                            </Typography>                               
-                        </Grid>      
-
-                    </Grid>                                                  
-                </Paper>
-            </Grid>
+            </Paper>
+        </Grid>              
         )
     }
 }

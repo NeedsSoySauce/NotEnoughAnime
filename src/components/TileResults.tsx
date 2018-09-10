@@ -33,12 +33,11 @@ export default class TileResults extends React.Component<ITileResultsProps> {
         });
 
         return (
-            <Grid
-                container={true}
-                justify="center"
-                direction="column"
-                alignItems="center"
-                spacing={16}
+            <Grid container={true} 
+                spacing={16} 
+                direction="column" 
+                justify="center" 
+                alignItems="center" 
                 style={{paddingTop: 16}}
             >               
                 {tiles}
