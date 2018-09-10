@@ -21,13 +21,12 @@ interface IInfoTileStates {
     fullResult: any
 }
 
-const styles = (theme: any) => ({
+const styles = (theme: any) => console.log(theme) || ({
     Grid: {
         width: "100%",
     },
     Paper: {
         padding: 16,
-        height: 158,
     },
     Avatar: {
         width: 90,
@@ -41,10 +40,13 @@ const styles = (theme: any) => ({
         marginRight: 16,
     },
     DescriptionDiv: {
-        width: 510,
-        height: 126,
+        [theme.breakpoints.up('sm')]: {
+            width: "80%",
+          },
+        [theme.breakpoints.down('xs')]: {
+            width: "100%",
+          },
         cssFloat: "left",
-        backgroundColor: "green",
         overflow: "visible",
     },
 })
@@ -124,7 +126,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
 
         return ( 
 
-        <Grid item={true} xs={11} md={8} className={classes.Grid}>
+        <Grid item={true} xs={11} md={8} className={classes.Grid} direction={"column"}>
             <Paper className={classes.Paper}>
                 
                 <Grid container={true}>
@@ -144,16 +146,16 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                                 {this.props.result.description}
                             </Typography>     
 
-                            {/* I can't figure out how to center this at the bottom of each Paper... */}
-                            <Grid container={true} justify="center">
-                                <Button size="small" style={{justifyContent: "center"}}>
-                                    <Typography variant="button" color="primary">
-                                        More info
-                                    </Typography>                      
-                                </Button>                                
-                            </Grid>   
+                             
                         </div>
-
+                        {/* I can't figure out how to center this at the bottom of each Paper... */}
+                        <Grid container={true} justify="center">
+                            <Button size="small" style={{justifyContent: "center"}}>
+                                <Typography variant="button" color="primary">
+                                    More info
+                                </Typography>                      
+                            </Button>                                
+                        </Grid>  
 
                       
                 </Grid>
