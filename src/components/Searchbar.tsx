@@ -61,7 +61,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
     public submitRequest = () => {
 
         if (!this.checkInput()) {
-            console.log("Query length < 3")
             return
         }
 
@@ -69,7 +68,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
         const query: string = encodeURIComponent(this.state.query)
 
         // Set app status to fetching so we know when to display a progress indicator
-        console.log("Fetching data")
         this.props.setAPIStatus("fetching")
 
         // Make an API call and set the API status to the appropriate value based on the API's response
@@ -79,7 +77,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
                 (response: any) => { 
                     if (response.status !== 200) {
                         if (response.status === 500) {
-                            console.log('No results found')
                             this.props.setAPIStatus("fetched_no_results")
                             return
                         }
@@ -90,7 +87,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
                     response.json()
                         .then(
                             (data: any) => {
-                                console.log("Fetched data")
                                 this.props.setAppState(data.result)
                                 this.props.setAPIStatus("fetched_results")
                         });

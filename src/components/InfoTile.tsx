@@ -49,6 +49,13 @@ const styles = (theme: any) => console.log(theme) || ({
         cssFloat: "left",
         overflow: "visible",
     },
+    Title: {
+        paddingBottom: theme.spacing.unit,
+    },
+    MoreInfoDiv: {
+        marginTop: theme.spacing.unit,
+        display: "inline-block"
+    }
 })
 
 
@@ -85,7 +92,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
             });
         }
 
-    public handleChange = () => {
+    public handleClick = () => {
         if (this.state.expanded) {
             console.log("close")         
 
@@ -104,60 +111,64 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
         });
     }
 
-    // Returns a progress indicator overlayed over the containing div and dims the containing div
-    // if that component is waiting for an API response
-    public ProgressIndicator = () => {
-         if (this.state.fullResult === undefined) {
-            return (
-                <CircularProgress />
-            )
-         } else {
-             return
-         }
-    }
-
     public render() {
 
+        const result = this.props.result;
+        const fullResult = this.state.fullResult;
+
         const classes = this.props.classes;
+        const isLoaded = fullResult !== null && fullResult !== undefined && this.state.expanded;
+        const isLoading = fullResult === undefined;
 
         return ( 
 
-        <Grid item={true} xs={11} md={8} className={classes.Grid}>
-            <Paper className={classes.Paper}>
-                
-                <Grid container={true}>
-    
+            <Grid item={true} xs={11} md={8} className={classes.Grid}>
+                <Paper className={classes.Paper}>            
+                    <Grid container={true}>
                         <div className={classes.AvatarDiv}>
                             <Avatar
-                                src={this.props.result.image_url}
+                                src={result.image_url}
                                 className={classes.Avatar}
                             />
                         </div>                  
                         
                         <div className={classes.DescriptionDiv}>
-                            <Typography variant="headline">
-                                {this.props.result.title}
-                            </Typography>       
+                            <Typography variant="headline" className={classes.Title}>
+                                {result.title}
+                            </Typography>      
+
                             <Typography variant="body1">
-                                {this.props.result.description}
+                                {isLoaded ? fullResult.synopsis : result.description}                
                             </Typography>     
+                            
 
-                             
+                            {isLoaded &&                   
+                                <div className={classes.MoreInfoDiv}>
+                                    <Typography variant="body2">
+                                        Episodes: {fullResult.episodes}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Type: {fullResult.type}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Rating: {fullResult.rating}
+                                    </Typography>
+                                </div>                      
+                                
+                            } 
                         </div>
-                        {/* I can't figure out how to center this at the bottom of each Paper... */}
+                        
                         <Grid container={true} justify="center">
-                            <Button size="small" style={{justifyContent: "center"}}>
+                            <Button size="small" style={{justifyContent: "center"}} onClick={this.handleClick}>
                                 <Typography variant="button" color="primary">
-                                    More info
+                                    {isLoaded ? "Less info" : isLoading ? <CircularProgress size={30}/> : "More info"}
                                 </Typography>                      
-                            </Button>                                
+                            </Button>                           
                         </Grid>  
+                    </Grid>
+                </Paper>
+            </Grid>    
 
-                      
-                </Grid>
-
-            </Paper>
-        </Grid>              
         )
     }
 }
