@@ -5,74 +5,74 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid'
 
 interface ITileResultsProps {
-    results: any
-    status: any
+	results: any
+	status: any
 }
 
 const CenterDiv = {
-    display: "flex", 
-    justifyContent: "center", 
-    alignItems: "center", 
-    marginTop: "33vh"
+	display: "flex", 
+	justifyContent: "center", 
+	alignItems: "center", 
+	marginTop: "33vh"
 }
 
 export default class TileResults extends React.Component<ITileResultsProps> {
 
-    constructor(props: ITileResultsProps) {
-        super(props)
-    }
+	constructor(props: ITileResultsProps) {
+		super(props)
+	}
 
-    public createTiles = () => {
-        
-        const tiles: any = [];
+	public createTiles = () => {
+		
+		const tiles: any = [];
 
-        this.props.results.forEach((element: any) => {
-            tiles.push(
-                <InfoTile key={element.mal_id} result={element}/>
-            )
-        });
+		this.props.results.forEach((element: any) => {
+			tiles.push(
+				<InfoTile key={element.mal_id} result={element}/>
+			)
+		});
 
-        return (
-            <Grid container={true} 
-                spacing={16} 
-                direction="column" 
-                justify="center" 
-                alignItems="center" 
-                style={{paddingTop: 16}}
-            >               
-                {tiles}
-            </Grid>         
-        )
+		return (
+			<Grid container={true} 
+				spacing={16} 
+				direction="column" 
+				justify="center" 
+				alignItems="center" 
+				style={{paddingTop: 16}}
+			>               
+				{tiles}
+			</Grid>         
+		)
 
-    }
+	}
 
-    public render() {
-        if (this.props.status === "fetched_results") {
-            return (
-               this.createTiles()      
-            )
+	public render() {
+		if (this.props.status === "fetched_results") {
+			return (
+			   this.createTiles()      
+			)
 
-        } else if (this.props.status === "fetching") {
-            return (
-                <div style={CenterDiv}>
-                    <CircularProgress />
-                </div>
-                    
-            )
-            
-        } else if (this.props.status === "fetched_no_results") {
-            return (
-                <div style={CenterDiv}>
-                    No results found
-                </div>
-            )
-        } else {
-            return (
-                <div style={CenterDiv}>
-                    Enter a query into the search box
-                </div>
-            )
-        }
+		} else if (this.props.status === "fetching") {
+			return (
+				<div style={CenterDiv}>
+					<CircularProgress />
+				</div>
+					
+			)
+			
+		} else if (this.props.status === "fetched_no_results") {
+			return (
+				<div style={CenterDiv}>
+					No results found
+				</div>
+			)
+		} else {
+			return (
+				<div style={CenterDiv}>
+					Enter a query into the search box
+				</div>
+			)
+		}
 
-    }
+	}
 }

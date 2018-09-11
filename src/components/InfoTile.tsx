@@ -86,7 +86,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     }
 
     public requestComplete = (data: any) => {
-        console.log("Data:", data)
+        // console.log("Data:", data)
         this.setState({
             fullResult: data
         })   
