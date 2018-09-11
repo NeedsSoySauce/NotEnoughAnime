@@ -26,7 +26,7 @@ const styles = (theme: any) => console.log(theme) || ({
         width: "100%",
     },
     Paper: {
-        padding: 16,
+        padding: theme.spacing.unit * 2,
     },
     Avatar: {
         width: 90,
@@ -37,7 +37,7 @@ const styles = (theme: any) => console.log(theme) || ({
         width: 90,
         height: 126,
         cssFloat: "left",
-        marginRight: 16,
+        marginRight: theme.spacing.unit * 2,
     },
     DescriptionDiv: {
         [theme.breakpoints.up('sm')]: {
@@ -119,14 +119,10 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     public render() {
 
         const classes = this.props.classes;
-        console.log(classes)
-        const width = this.props.width;
-
-        console.log(width)
 
         return ( 
 
-        <Grid item={true} xs={11} md={8} className={classes.Grid} direction={"column"}>
+        <Grid item={true} xs={11} md={8} className={classes.Grid}>
             <Paper className={classes.Paper}>
                 
                 <Grid container={true}>

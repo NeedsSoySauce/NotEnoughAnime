@@ -1,11 +1,14 @@
 import * as React from 'react';
 
-import { Button, Grid, Paper, TextField } from '@material-ui/core/';
+import { Grid, IconButton, Paper, TextField, withWidth } from '@material-ui/core/';
+import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
 interface ISearchBarProps {
     setAppState: any
     setAPIStatus: any
+    classes: any
+    width: any
 }
 
 interface ISearchBarState {
@@ -17,7 +20,20 @@ interface ISearchBarState {
     type: "",
 }
 
-export default class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
+const styles = (theme: any) => ({
+    SearchbarDiv: {
+        padding: theme.spacing.unit,
+    }, 
+    IconButton: {
+        height: "1.4em"
+    },
+    Paper: {
+        cssflexDirection: "row",
+    },
+
+})
+
+class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
     public state: any = {
         genre: 0,           
@@ -99,29 +115,42 @@ export default class Searchbar extends React.Component<ISearchBarProps, ISearchB
     }
 
     public render() {
+
+        const classes = this.props.classes;
+
         return (
-            <div style={{padding: 8}}>
+
+            <div className={classes.SearchbarDiv}>   
                 <Grid container={true} justify="center">
-                        <Paper style={{flexDirection: "row"}}>
-                            <div style={{display: "inline-block"}}>
-                                <Button onClick={this.handleClick}>
-                                    <SearchIcon/>         
-                                </Button>
-                            </div>
-                            <div style={{display: "inline-block", justifyContent: "center"}}>
-                                <TextField 
-                                    style={{padding: 8}}
-                                    InputProps={{disableUnderline: true}}
+                    <Paper className={classes.Paper}>
+                        <Grid container={true} alignItems="flex-end">
+                            
+                            <Grid item={true}>
+                                <IconButton onClick={this.handleClick} className={classes.IconButton}>
+                                    <SearchIcon />
+                                </IconButton>
+                            </Grid>
+                            
+                            <Grid item={true}>                     
+                                <TextField
+                                    InputProps={{
+                                        disableUnderline: true
+                                    }}
                                     autoFocus={true} 
                                     placeholder="Search"
                                     value={this.state.query}
                                     onKeyDown={this.handleKeyDown}
                                     onChange={this.handleChange}
-                                />
-                            </div>
-                        </Paper>
+                                    className={classes.TextField}
+                                />   
+                            
+                            </Grid>
+                        </Grid>
+                    </Paper>
                 </Grid>
             </div>
         );
     }
 }
+
+export default withStyles(styles)(withWidth()(Searchbar))

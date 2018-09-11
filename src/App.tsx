@@ -35,11 +35,9 @@ export default class App extends React.Component {
     return (      
       <div className="App">
         <CssBaseline />
-        <div>
-          <AppBar position="sticky">
-                  <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus}/>
-          </AppBar>
-        </div>
+        <AppBar position="sticky">
+                <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus}/>
+        </AppBar>
 
         
         <TileResults results={this.state.APIResponse} status={this.state.APIStatus}/>
