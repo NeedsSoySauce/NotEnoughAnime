@@ -1,7 +1,9 @@
 import * as React from 'react';
 
+import { List, ListItem, ListItemText } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -44,7 +46,7 @@ const styles = (theme: any) => console.log(theme) || ({
             width: "80%",
           },
         [theme.breakpoints.down('xs')]: {
-            width: "60%",
+            width: "100%",
           },
         cssFloat: "left",
         overflow: "visible",
@@ -52,10 +54,7 @@ const styles = (theme: any) => console.log(theme) || ({
     Title: {
         paddingBottom: theme.spacing.unit,
     },
-    MoreInfoDiv: {
-        marginTop: theme.spacing.unit,
-        display: "inline-block"
-    }
+    
 })
 
 
@@ -69,8 +68,9 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     }
 
     // Submits a request to the jikan API to get detailed information about the selected anime
+    // We only do this when the user wants more info as we don't want to make too many requests
     public getDetails = () => {
-        // Make an API call to get the full image from myanimelist for this anime
+
         fetch(`https://api.jikan.moe/anime/${this.props.result.mal_id}`)
             .then(
                 (response: any) => { 
@@ -93,13 +93,9 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
         }
 
     public handleClick = () => {
-        if (this.state.expanded) {
-            console.log("close")         
-
         // The first time this panel is expanded, make an API call to load the whole anime's details
-        } else if (!this.state.expanded) {
-            console.log("open")
-            if (this.state.fullResult === null) {
+        if (!this.state.expanded) {
+            if (this.state.fullResult === null && this.state.fullResult !== undefined) {
                 this.setState({
                     fullResult: this.getDetails()                 
                 })       
@@ -111,14 +107,42 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
         });
     }
 
-    public render() {
+    // Returns a list of chip elements for each genre in the current anime
+    public getGenres = () => {
 
+        const fullResult = this.state.fullResult;
+        const isLoaded = fullResult !== null && fullResult !== undefined && this.state.expanded;
+
+        if (!isLoaded) {
+            return null
+        }
+
+        const genres = this.state.fullResult.genre;      
+        const chips: any = []
+
+        for (const elem of genres) {
+            chips.push(<Grid item={true}><Chip label={elem.name}/></Grid>)               
+        }
+
+        return (
+
+            <Grid container={true} spacing={16} justify="center" style={{paddingTop: 8}}>
+                {chips}
+            </Grid>
+
+        )
+    }
+
+    // Should still look okay up to about 320px width
+    public render() {
+        
         const result = this.props.result;
         const fullResult = this.state.fullResult;
 
         const classes = this.props.classes;
         const isLoaded = fullResult !== null && fullResult !== undefined && this.state.expanded;
         const isLoading = fullResult === undefined;
+        const dense = true;
 
         return ( 
 
@@ -141,21 +165,55 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                                 {isLoaded ? fullResult.synopsis : result.description}                
                             </Typography>     
                             
+                            {this.getGenres()}
 
-                            {isLoaded &&                   
-                                <div className={classes.MoreInfoDiv}>
-                                    <Typography variant="body2">
-                                        Episodes: {fullResult.episodes}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Type: {fullResult.type}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        Rating: {fullResult.rating}
-                                    </Typography>
-                                </div>                      
-                                
+                            {isLoaded &&         
+                                <Grid container={true} spacing={16} style={{paddingTop: 8, paddingLeft: 8}} justify="space-between">
+
+                                    <List dense={dense} disablePadding={true}>
+                                        <ListItem disableGutters={true}>
+                                            <ListItemText
+                                                primary="Episodes"
+                                                secondary={fullResult.episodes}  
+                                            />
+                                        </ListItem>
+                                    </List>
+                                    <List dense={dense}>
+                                        <ListItem disableGutters={true}>
+                                            <ListItemText
+                                                primary="Duration"
+                                                secondary={fullResult.duration}
+                                            />
+                                        </ListItem>
+                                    </List>
+                                    <List dense={dense}>
+                                        <ListItem disableGutters={true}>
+                                            <ListItemText
+                                                primary="Type"
+                                                secondary={fullResult.type}
+                                            />
+                                        </ListItem>
+                                    </List>
+                                    <List dense={dense}>
+                                        <ListItem disableGutters={true}>
+                                            <ListItemText
+                                                primary="Status"
+                                                secondary={fullResult.status}
+                                            />
+                                        </ListItem>
+                                    </List>
+                                    <List dense={dense}>
+                                        <ListItem disableGutters={true}>
+                                            <ListItemText
+                                                primary="Rating"
+                                                secondary={fullResult.rating}
+                                            />
+                                        </ListItem>
+                                    </List>
+
+                                </Grid>          
                             } 
+
                         </div>
                         
                         <Grid container={true} justify="center">
