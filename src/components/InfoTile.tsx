@@ -71,26 +71,26 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     // We only do this when the user wants more info as we don't want to make too many requests
     public getDetails = () => {
 
-        fetch(`https://api.jikan.moe/v3/anime/${this.props.result.mal_id}`)
-            .then(
-                (response: any) => { 
-                    if (response.status !== 200) {
-                        if (response.status === 500) {
-                            return
-                        }
-                        return
+        const URL: string = `https://api.jikan.moe/v3/anime/${this.props.result.mal_id}`
 
-                    } else {
-                        response.json()
-                            .then(
-                                (data: any) => {
-                                    this.setState({
-                                        fullResult: data
-                                    })
-                            });
-                    }
-            });
-        }
+        // Alternate fetch version
+        fetch(URL)
+        .then((response: any) => {
+            if (response.status !== 200) {
+                return
+            }
+            response.json()
+            .then((data: any) => this.requestComplete(data))
+        })      
+        .catch(err => console.log("Error:", err));
+    }
+
+    public requestComplete = (data: any) => {
+        console.log("Data:", data)
+        this.setState({
+            fullResult: data
+        })   
+    }
 
     public handleClick = () => {
         // The first time this panel is expanded, make an API call to load the whole anime's details
@@ -117,7 +117,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
             return null
         }
 
-        const genres = this.state.fullResult.genre;      
+        const genres = this.state.fullResult.genres;      
         const chips: any = []
 
         for (const elem of genres) {
@@ -162,7 +162,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                             </Typography>      
 
                             <Typography variant="body1">
-                                {isLoaded ? fullResult.synopsis : result.description}                
+                                {isLoaded ? fullResult.synopsis : result.synopsis}                
                             </Typography>     
                             
                             {this.getGenres()}
