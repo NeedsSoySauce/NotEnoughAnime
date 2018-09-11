@@ -23,7 +23,7 @@ export default class TileResults extends React.Component<ITileResultsProps> {
     }
 
     public createTiles = () => {
-
+        
         const tiles: any = [];
 
         this.props.results.forEach((element: any) => {

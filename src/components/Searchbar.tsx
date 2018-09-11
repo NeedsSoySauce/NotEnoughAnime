@@ -63,34 +63,32 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
         if (!this.checkInput()) {
             return
         }
-
+        
         // Encode the query into a valid url component
         const query: string = encodeURIComponent(this.state.query)
+        
+        const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=1`;
 
         // Set app status to fetching so we know when to display a progress indicator
         this.props.setAPIStatus("fetching")
 
-        // Make an API call and set the API status to the appropriate value based on the API's response
-        // so that we can stop displaying a progress indicator
-        fetch(`https://api.jikan.moe/search/anime/${query}/1`)
-            .then(
-                (response: any) => { 
-                    if (response.status !== 200) {
-                        if (response.status === 500) {
-                            this.props.setAPIStatus("fetched_no_results")
-                            return
-                        }
-                        console.log('statusCode', response.status)
-                        return
-                    }
-                    
-                    response.json()
-                        .then(
-                            (data: any) => {
-                                this.props.setAppState(data.result)
-                                this.props.setAPIStatus("fetched_results")
-                        });
-            });
+        // Alternate fetch version
+        fetch(URL)
+        .then((response: any) => {
+            if (response.status !== 200) {
+                this.props.setAPIStatus("fetched_no_results")
+                return
+            }
+            response.json()
+            .then((data: any) => this.requestComplete(data))
+        })      
+        .catch(err => console.log("Error:", err));
+    }
+
+    public requestComplete = (data: any) => {
+        console.log("Data:", data)
+        this.props.setAppState(data.results)
+        this.props.setAPIStatus("fetched_results")      
     }
 
     public handleKeyDown = (event: any) => {

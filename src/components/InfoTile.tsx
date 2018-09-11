@@ -71,7 +71,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     // We only do this when the user wants more info as we don't want to make too many requests
     public getDetails = () => {
 
-        fetch(`https://api.jikan.moe/anime/${this.props.result.mal_id}`)
+        fetch(`https://api.jikan.moe/v3/anime/${this.props.result.mal_id}`)
             .then(
                 (response: any) => { 
                     if (response.status !== 200) {
