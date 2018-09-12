@@ -16,7 +16,6 @@ interface ISearchBarProps extends RouteComponentProps<Searchbar>{
 
 interface ISearchBarState {         
 	query: "",
-	prevQuery: "",
 }
 
 const styles = (theme: any) => ({
@@ -41,7 +40,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 		this.state = {
 			query: parsed.q,
-			prevQuery: ""
 		}
 	}
 
@@ -77,6 +75,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		this.props.history.push(URL)
 	}
 
+	// Triggers any time the user presses a key down in the searchbar
 	public handleKeyDown = (event: any) => {
 		// Only trigger if the user presses enter
 		if (event.keyCode === 13) {
@@ -84,12 +83,14 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		}    
 	}
 
+	// Updates searchbar value as the user types
 	public handleChange = (event: any) => {
 		this.setState({ 
 			query: event.target.value 
 		});
 	}
 
+	// Triggered when user clicks the search icon in the searchbar
 	public handleClick = () => {
 		this.updateURL();
 	}

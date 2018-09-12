@@ -40,7 +40,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			status: "fetching", 
 			response: undefined, 
 			params: this.props.match.params,
-			qs: parsed
+			qs: parsed // query string
 		}
 	}
 
@@ -57,8 +57,26 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		return false 
 	}
 
+	// Check the URL to verify that it's valid
+	// A valid URL should contain:
+	// - the page type of results we want (only "search" at the moment) as the first param
+	// - the category of results we want (only "anime" at the moment) as the second param
+	// - the search string as "q" in the query string
+	// - the page number of the results we want as "page" in the query string
+	public checkURL = () => {
+		// TBD - add logic
+		return
+	}
+
+	// When this component mounts that means the URL has changed to 
 	public componentDidMount = () => {
-		this.submitRequest()		
+		if (this.checkURL) {
+			this.submitRequest()	
+		} else {
+			this.setState({
+				status: "invalid_url"
+			})
+		}		
 	}
 
 	// Submits a request to the jikan API based on the currently selected search options and text input (from the url)
