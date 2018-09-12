@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import InfoTile from './InfoTile';
 import PageNav from './PageNav';
 
+import SearchContext from "./SearchContext";
+
 interface ITileResultsProps {
 	data: any
 	status: any
@@ -54,9 +56,14 @@ export default class TileResults extends React.Component<ITileResultsProps> {
 			return (
 				<div>
 					{this.createTiles()}
-			   		<PageNav initialPage={1} pageCount={this.props.data.last_page}/>
-				</div>
-			   
+					<SearchContext.Consumer>
+						{
+							(context: any) => {
+								return <PageNav pageCount={context.data.last_page} updatePage={context.updatePage} currentPage={context.currentPage}/>
+							}
+						}						
+					</SearchContext.Consumer>			   		
+				</div>			   
 			)
 
 		} else if (this.props.status === "fetching") {

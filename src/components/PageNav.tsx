@@ -8,31 +8,25 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
 interface IPageNavProps {
-    initialPage: number
     pageCount: number
-}
-
-interface IPageNavStates {
+    updatePage: any
     currentPage: number
 }
 
-class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
+class PageNav extends React.Component<IPageNavProps> {
 
     constructor(props: any) {
         super(props)
-
-        this.state = {currentPage: this.props.initialPage}
     }
 
     // Switches to the given page number (if possible)
 	public changePage = (pageNumber: number) => {
         const pageCount = this.props.pageCount;   
-
-        if (pageNumber >= 1 && pageNumber <= pageCount) {
-            this.setState({
-                currentPage: pageNumber
-            })
+        // console.log("pageNumber (PageNav)", pageNumber)
+        if (pageNumber >= 1 && pageNumber <= pageCount && pageNumber !== this.props.currentPage) {
+            this.props.updatePage(pageNumber)
         }
+        // console.log("currentPage:", this.props.currentPage)
 	}
 
     public firstPage = () => {
@@ -40,7 +34,7 @@ class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
     }
 
     public nextPage = () => {
-        this.changePage(this.state.currentPage + 1)
+        this.changePage(this.props.currentPage + 1)
     }
 
     public scrollToTop = () => {
@@ -48,34 +42,44 @@ class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
     }
 
     public previousPage = () => {
-        this.changePage(this.state.currentPage - 1)
+        this.changePage(this.props.currentPage - 1)
     }
 
+    // myanimelist will only ever return up to 20 pages in its results, so we can't actually take
+    // the user to the true last page in a single leap
     public lastPage = () => {
         this.changePage(this.props.pageCount)
     }
 
     public render() {
 
+        const currentPage = this.props.currentPage;
+        const pageCount = this.props.pageCount;
+    
+        const isFirstPage = currentPage === 1 ? true : false;
+
+        // The api starts to return the previous page number once we're on the last page,
+        // so we have to use >= to compare
+        const isLastPage = currentPage >= pageCount ? true : false;
+
         return (
 
             <div>
                 <Grid container={true} spacing={8} justify="space-evenly">
-                
                     <Grid item={true}>
-                        <IconButton onClick={this.firstPage}>
+                        <IconButton onClick={this.firstPage} disabled={isFirstPage}>
                             <FirstPageIcon />
                         </IconButton>
-                        <IconButton onClick={this.previousPage}>
+                        <IconButton onClick={this.previousPage} disabled={isFirstPage ? true : false}>
                             <ChevronLeftIcon />
                         </IconButton>
                         <IconButton onClick={this.scrollToTop}>
                             <ArrowUpwardIcon />
                         </IconButton>
-                        <IconButton onClick={this.nextPage}>
+                        <IconButton onClick={this.nextPage} disabled={isLastPage ? true : false}>
                             <ChevronRightIcon />
                         </IconButton>
-                        <IconButton onClick={this.lastPage}>
+                        <IconButton onClick={this.lastPage} disabled={isLastPage}>
                             <LastPageIcon />
                         </IconButton>
                     </Grid>
@@ -83,9 +87,7 @@ class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
             </div>
 
         )
-
     }
-
 }
 
 export default PageNav

@@ -4,22 +4,20 @@ import { Grid, IconButton, Paper, TextField, withWidth } from '@material-ui/core
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
-import SearchContext from './SearchContext';
+// import SearchContext from './SearchContext';
 
 interface ISearchBarProps {
 	setAppState: any
 	setAPIStatus: any
+	setPage: any
 	classes: any
 	width: any
+	page: number
 }
 
-interface ISearchBarState {
-	genre: 0,           
-	page: 1,
+interface ISearchBarState {         
 	query: "",
-	rated: "",  
-	status: "",
-	type: "",
+	prevQuery: "",
 }
 
 const styles = (theme: any) => ({
@@ -41,13 +39,8 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		super(props)
 
 		this.state = {
-			genre: 0,
-			page: 1,
 			query: "",
-			rated: "",
-			status: "",
-			type: "",
-
+			prevQuery: ""
 		}
 	}
 
@@ -61,7 +54,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	}
 
 	// Submits a request to the jikan API based on the currently selected search options and text input
-	public submitRequest = () => {
+	public submitRequest = (newQuery = true) => {
 
 		if (!this.checkInput()) {
 			return
@@ -69,14 +62,19 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 		// Encode the query into a valid url component
 		const query: string = encodeURIComponent(this.state.query)
-		const page: number = this.state.page
+		let page: number = this.props.page
+
+		// If we want to perform a new search rather than get the next page of the current search
+		if (newQuery) {
+			page = 1
+			this.props.setPage(1)
+		}
 		
 		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
 
 		// Set app status to fetching so we know when to display a progress indicator
 		this.props.setAPIStatus("fetching")
 
-		// Alternate fetch version
 		fetch(URL)
 		.then((response: any) => {
 			if (response.status !== 200) {
@@ -90,7 +88,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	}
 
 	public requestComplete = (data: any) => {
-		// console.log("Data:", data)
+		console.log("Data:", data)
 		this.props.setAppState(data)
 		this.props.setAPIStatus("fetched_results")      
 	}
@@ -110,6 +108,14 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 	public handleClick = () => {
 		this.submitRequest();
+	}
+
+	// If the page number has changed, we need to fetch the next page of results
+	public componentDidUpdate = (prevProps: any, prevState: any, snapshot: any) => {
+		if (prevProps.page !== this.props.page) {
+			console.log("Searchbar page changed")
+			this.submitRequest(false)		
+		}		
 	}
 
 	public render() {
@@ -145,11 +151,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 							</Grid>					
 						</Grid>
 					</Paper>
-					<SearchContext.Consumer>
-						{(value: any) => 
-							value.page === 7 ? "True!" : "False!"
-						}
-					</SearchContext.Consumer>
 				</Grid>
 			</div>
 		);

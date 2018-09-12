@@ -14,6 +14,7 @@ export default class App extends React.Component {
 	public state: any = {
 		APIResponse: [],
 		APIStatus: "no_call",
+		pageNumber: 1,
 	}
 
 	// Callback to update APIResponse
@@ -32,14 +33,31 @@ export default class App extends React.Component {
 		// console.log("APIStatus: ", this.state.APIStatus)
 	}
 
+	public updatePage = (page: number) => {
+		this.setState({
+			pageNumber: page
+		},
+		() => console.log("pageNumber: ", this.state.pageNumber)
+		)
+		
+	}
+
 	public render() {
+
+		const contextValues = {
+			data: this.state.APIResponse, 
+			status: this.state.APIStatus, 
+			currentPage: this.state.pageNumber,
+			updatePage: this.updatePage,
+		}
+
 		return (      
 			<div className="App">
-				<SearchContext.Provider value={{greeting: "Hello World!", page: 7}}>
+				<SearchContext.Provider value={contextValues}>
 
 						<CssBaseline />
 						<AppBar position="sticky">
-                            <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus}/>
+                            <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus} page={this.state.pageNumber} setPage={this.updatePage}/>
 						</AppBar>
 
 						<TileResults data={this.state.APIResponse} status={this.state.APIStatus}/>
