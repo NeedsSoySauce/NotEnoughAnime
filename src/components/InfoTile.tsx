@@ -101,7 +101,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                 })       
             }
         }
-        console.log(this.state.fullResult)
+        // console.log(this.state.fullResult)
         this.setState({
             expanded: !this.state.expanded
         });

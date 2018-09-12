@@ -2,12 +2,13 @@ import './css/stylesheet.css';
 
 import * as React from 'react';
 
+import { Route } from 'react-router-dom';
+
 import { AppBar } from '@material-ui/core/';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Searchbar from './components/Searchbar';
 import SearchContext from './components/SearchContext';
-import TileResults from './components/TileResults';
 
 export default class App extends React.Component {
 
@@ -52,18 +53,17 @@ export default class App extends React.Component {
 		}
 
 		return (      
-			<div>
 				<SearchContext.Provider value={contextValues}>
-
 						<CssBaseline />
 						<AppBar position="sticky">
-                            <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus} page={this.state.pageNumber} setPage={this.updatePage}/>
+							<Route>
+								<Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus} page={this.state.pageNumber} setPage={this.updatePage}/>
+							</Route>
+                            
 						</AppBar>
-
-						<TileResults data={this.state.APIResponse} status={this.state.APIStatus}/>
-
                 </SearchContext.Provider>
-			</div>
 		);
 	}
 }
+
+// Different approach, we have the searchbar in the header and TileResults renders whatever results we've found

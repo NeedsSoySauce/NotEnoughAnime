@@ -1,16 +1,24 @@
 import * as React from 'react';
 
+import { RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router-dom';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
 import InfoTile from './InfoTile';
 import PageNav from './PageNav';
+import SearchContext from './SearchContext';
 
-import SearchContext from "./SearchContext";
+interface ITileResultsProps extends RouteComponentProps<TileResults> {
+	match: any
+}
 
-interface ITileResultsProps {
-	data: any
+interface ITileResultsStates {
 	status: any
+	response: any // data returned by the API
+	params: any
+	qs: any // query string
 }
 
 const CenterDiv = {
@@ -20,17 +28,80 @@ const CenterDiv = {
 	marginTop: "33vh"
 }
 
-export default class TileResults extends React.Component<ITileResultsProps> {
+export class TileResults extends React.Component<ITileResultsProps, ITileResultsStates> {
 
 	constructor(props: ITileResultsProps) {
 		super(props)
+
+		const queryString = require('query-string');
+		const parsed = queryString.parse(this.props.location.search)
+
+		this.state = {
+			status: "fetching", 
+			response: undefined, 
+			params: this.props.match.params,
+			qs: parsed
+		}
+	}
+
+	// Searches to myanimelist via the jikan API must be at least 3 characters long, so this just returns true or false
+	// depending on whether the text input is long enough 
+	public checkInput = () => {
+		console.log("Query", this.props.location.search)		
+		console.log("Query parsed", this.state.qs)
+		console.log("Params", this.state.params)
+		if (this.state.qs.q.length >= 3) {
+			return true
+		}
+		return false 
+	}
+
+	public componentDidMount = () => {
+		console.log("TileResults mounted!")
+		this.submitRequest()		
+	}
+
+	// Submits a request to the jikan API based on the currently selected search options and text input (from the url)
+	public submitRequest = () => {
+
+		if (!this.checkInput()) {
+			return
+		}
+
+		// Encode the query into a valid url component
+		const query: string = encodeURIComponent(this.state.qs.q)
+		const page: number = this.state.qs.page
+
+		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
+		console.log("URL", URL)
+
+		fetch(URL)
+		.then((response: any) => {
+			if (response.status !== 200) {
+				this.setState({
+					status: "fetched_no_results"
+				})
+				return				
+			}
+			response.json()
+			.then((data: any) => this.requestComplete(data))
+		})      
+		.catch(err => console.log("Error:", err));
+	}
+
+	public requestComplete = (data: any) => {
+		console.log("Data:", data)
+		this.setState({
+			status: "fetched_results",
+			response: data
+		}) 
 	}
 
 	public createTiles = () => {
-		
+
 		const tiles: any = [];
 
-		this.props.data.results.forEach((element: any) => {
+		this.state.response.results.forEach((element: any) => {
 			tiles.push(
 				<InfoTile key={element.mal_id} result={element}/>
 			)
@@ -47,12 +118,12 @@ export default class TileResults extends React.Component<ITileResultsProps> {
 				{tiles}
 			</Grid>         
 		)
-
 	}
 
 	public render() {
 		
-		if (this.props.status === "fetched_results") {
+		// By default, we render a circular progress until a result has been found
+		if (this.state.status === "fetched_results") {
 			return (
 				<div>
 					{this.createTiles()}
@@ -67,15 +138,7 @@ export default class TileResults extends React.Component<ITileResultsProps> {
 				</div>			   
 			)
 
-		} else if (this.props.status === "fetching") {
-			return (
-				<div style={CenterDiv}>
-					<CircularProgress />
-				</div>
-					
-			)
-			
-		} else if (this.props.status === "fetched_no_results") {
+		} else if (this.state.status === "fetched_no_results") {
 			return (
 				<div style={CenterDiv}>
 					No results found
@@ -84,10 +147,12 @@ export default class TileResults extends React.Component<ITileResultsProps> {
 		} else {
 			return (
 				<div style={CenterDiv}>
-					Enter a query into the search box
+					<CircularProgress />
 				</div>
+					
 			)
 		}
-
 	}
 }
+
+export default withRouter(TileResults)

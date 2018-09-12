@@ -1,17 +1,18 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
-import { Grid, IconButton, Paper, TextField, withWidth } from '@material-ui/core/';
+import { Grid, IconButton, Paper, TextField } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
 // import SearchContext from './SearchContext';
 
-interface ISearchBarProps {
+interface ISearchBarProps extends RouteComponentProps<Searchbar>{
 	setAppState: any
 	setAPIStatus: any
 	setPage: any
 	classes: any
-	width: any
 	page: number
 }
 
@@ -57,11 +58,14 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	public submitRequest = (newQuery = true) => {
 
 		if (!this.checkInput()) {
+			console.log("Search query length < 3 characters")
 			return
 		}
 
 		// Encode the query into a valid url component
 		const query: string = encodeURIComponent(this.state.query)
+
+		const type: string = "anime"
 		let page: number = this.props.page
 
 		// If we want to perform a new search rather than get the next page of the current search
@@ -70,27 +74,9 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 			this.props.setPage(1)
 		}
 		
-		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
+		const URL: string = `/search/${type}/?q=${query}&page=${page}`
 
-		// Set app status to fetching so we know when to display a progress indicator
-		this.props.setAPIStatus("fetching")
-
-		fetch(URL)
-		.then((response: any) => {
-			if (response.status !== 200) {
-				this.props.setAPIStatus("fetched_no_results")
-				return
-			}
-			response.json()
-			.then((data: any) => this.requestComplete(data))
-		})      
-		.catch(err => console.log("Error:", err));
-	}
-
-	public requestComplete = (data: any) => {
-		// console.log("Data:", data)
-		this.props.setAppState(data)
-		this.props.setAPIStatus("fetched_results")      
+		this.props.history.push(URL)
 	}
 
 	public handleKeyDown = (event: any) => {
@@ -157,4 +143,4 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	}
 }
 
-export default withStyles(styles)(withWidth()(Searchbar))
+export default withRouter(withStyles(styles)((Searchbar)))
