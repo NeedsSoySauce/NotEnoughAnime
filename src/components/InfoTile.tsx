@@ -23,7 +23,7 @@ interface IInfoTileStates {
     fullResult: any
 }
 
-const styles = (theme: any) => console.log(theme) || ({
+const styles = (theme: any) => ({
     Grid: {
         width: "100%",
     },
