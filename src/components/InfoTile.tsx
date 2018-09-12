@@ -121,7 +121,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
         const chips: any = []
 
         for (const elem of genres) {
-            chips.push(<Grid item={true}><Chip label={elem.name}/></Grid>)               
+            chips.push(<Grid item={true} key={elem.name}><Chip label={elem.name}/></Grid>)               
         }
 
         return (

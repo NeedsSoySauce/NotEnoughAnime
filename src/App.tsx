@@ -42,7 +42,7 @@ export default class App extends React.Component {
                             <Searchbar setAppState={this.updateResponse} setAPIStatus={this.updateStatus}/>
 						</AppBar>
 
-						<TileResults results={this.state.APIResponse} status={this.state.APIStatus}/>
+						<TileResults data={this.state.APIResponse} status={this.state.APIStatus}/>
 
                 </SearchContext.Provider>
 			</div>

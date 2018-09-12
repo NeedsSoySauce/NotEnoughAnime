@@ -37,17 +37,18 @@ const styles = (theme: any) => ({
 
 class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
-	public state: any = {
-		genre: 0,           
-		page: 1,
-		query: "",
-		rated: "",  
-		status: "",
-		type: "",
-	}
-
 	constructor(props: ISearchBarProps) {
 		super(props)
+
+		this.state = {
+			genre: 0,
+			page: 1,
+			query: "",
+			rated: "",
+			status: "",
+			type: "",
+
+		}
 	}
 
 	// Searches to myanimelist via the jikan API must be at least 3 characters long, so this just returns true or false
@@ -68,8 +69,9 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 		// Encode the query into a valid url component
 		const query: string = encodeURIComponent(this.state.query)
+		const page: number = this.state.page
 		
-		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=1`;
+		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
 
 		// Set app status to fetching so we know when to display a progress indicator
 		this.props.setAPIStatus("fetching")
@@ -89,7 +91,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 	public requestComplete = (data: any) => {
 		// console.log("Data:", data)
-		this.props.setAppState(data.results)
+		this.props.setAppState(data)
 		this.props.setAPIStatus("fetched_results")      
 	}
 
