@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^1.5.1",
     "@material-ui/icons": "^2.0.3",
+    "@types/query-string": "^6.1.0",
     "@types/react-router-dom": "^4.3.0",
     "normalize.css": "^8.0.0",
     "prop-types": "^15.6.2",

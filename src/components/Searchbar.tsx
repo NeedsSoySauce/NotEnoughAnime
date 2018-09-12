@@ -6,14 +6,12 @@ import { Grid, IconButton, Paper, TextField } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
+import * as qs from 'query-string';
+
 // import SearchContext from './SearchContext';
 
 interface ISearchBarProps extends RouteComponentProps<Searchbar>{
-	setAppState: any
-	setAPIStatus: any
-	setPage: any
 	classes: any
-	page: number
 }
 
 interface ISearchBarState {         
@@ -54,27 +52,25 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		return false 
 	}
 
-	// Submits a request to the jikan API based on the currently selected search options and text input
-	public submitRequest = (newQuery = true) => {
+	// Updates the current URL with the given search parameters
+	public updateURL = () => {
 
 		if (!this.checkInput()) {
 			console.log("Search query length < 3 characters")
 			return
 		}
 
-		// Encode the query into a valid url component
-		const query: string = encodeURIComponent(this.state.query)
-
 		const type: string = "anime"
-		let page: number = this.props.page
 
-		// If we want to perform a new search rather than get the next page of the current search
-		if (newQuery) {
-			page = 1
-			this.props.setPage(1)
+		const query = {
+			q: this.state.query,
+			page: 1
 		}
-		
-		const URL: string = `/search/${type}/?q=${query}&page=${page}`
+
+		// Encode the query into a valid query string
+		const queryString = qs.stringify(query)
+
+		const URL: string = `/search/${type}/?${queryString}`
 
 		this.props.history.push(URL)
 	}
@@ -82,7 +78,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	public handleKeyDown = (event: any) => {
 		// Only trigger if the user presses enter
 		if (event.keyCode === 13) {
-			this.submitRequest();
+			this.updateURL();
 		}    
 	}
 
@@ -93,15 +89,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	}
 
 	public handleClick = () => {
-		this.submitRequest();
-	}
-
-	// If the page number has changed, we need to fetch the next page of results
-	public componentDidUpdate = (prevProps: any, prevState: any, snapshot: any) => {
-		if (prevProps.page !== this.props.page) {
-			console.log("Searchbar page changed")
-			this.submitRequest(false)		
-		}		
+		this.updateURL();
 	}
 
 	public render() {
@@ -109,7 +97,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		const classes = this.props.classes;
 
 		return (
-
 			<div className={classes.SearchbarDiv}>   
 				<Grid container={true} justify="center">
 					<Paper className={classes.Paper}>
@@ -132,8 +119,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 									onKeyDown={this.handleKeyDown}
 									onChange={this.handleChange}
 									className={classes.TextField}
-								/>   
-							
+								/>   						
 							</Grid>					
 						</Grid>
 					</Paper>

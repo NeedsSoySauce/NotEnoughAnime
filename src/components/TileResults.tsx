@@ -8,7 +8,8 @@ import Grid from '@material-ui/core/Grid';
 
 import InfoTile from './InfoTile';
 import PageNav from './PageNav';
-import SearchContext from './SearchContext';
+
+import * as qs from 'query-string';
 
 interface ITileResultsProps extends RouteComponentProps<TileResults> {
 	match: any
@@ -33,8 +34,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	constructor(props: ITileResultsProps) {
 		super(props)
 
-		const queryString = require('query-string');
-		const parsed = queryString.parse(this.props.location.search)
+		const parsed = qs.parse(this.props.location.search)
 
 		this.state = {
 			status: "fetching", 
@@ -47,10 +47,10 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	// Searches to myanimelist via the jikan API must be at least 3 characters long, so this just returns true or false
 	// depending on whether the text input is long enough 
 	public checkInput = () => {
-		console.log("Query", this.props.location.search)		
-		console.log("Query parsed", this.state.qs)
-		console.log("Params", this.state.params)
-		console.log("Path", this.props.location)
+		// console.log("Query", this.props.location.search)		
+		// console.log("Query parsed", this.state.qs)
+		// console.log("Params", this.state.params)
+		// console.log("Location", window.location.href)
 		if (this.state.qs.q.length >= 3) {
 			return true
 		}
@@ -58,7 +58,6 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	}
 
 	public componentDidMount = () => {
-		console.log("TileResults mounted!")
 		this.submitRequest()		
 	}
 
@@ -69,11 +68,16 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			return
 		}
 
-		// Encode the query into a valid url component
-		const query: string = encodeURIComponent(this.state.qs.q)
-		const page: number = this.state.qs.page
+		const query = {
+			q: this.state.qs.q,
+			page: this.state.qs.page
+		}
 
-		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
+		// Encode the query into a valid query string
+		const queryString = qs.stringify(query)
+
+
+		const URL: string = `https://api.jikan.moe/v3/search/anime?${queryString}`
 		// console.log("URL", URL)
 
 		fetch(URL)
@@ -91,7 +95,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	}
 
 	public requestComplete = (data: any) => {
-		console.log("Data:", data)
+		// console.log("Data:", data)
 		this.setState({
 			status: "fetched_results",
 			response: data
@@ -123,19 +127,16 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 
 	public render() {
 		
-		// By default, we render a circular progress until a result has been found
+		const response = this.state.response;
+		
+		// If any results are found, we display them as vertical tiles
 		if (this.state.status === "fetched_results") {
 			return (
 				<div>
 					{this.createTiles()}
-					<SearchContext.Consumer>
-						{
-							(context: any) => {
-								return <PageNav pageCount={context.data.last_page} 
-										updatePage={context.updatePage} currentPage={context.currentPage}/>
-							}
-						}						
-					</SearchContext.Consumer>			   		
+					<PageNav 
+						pageCount={response.last_page} 
+					/>		   		
 				</div>			   
 			)
 
@@ -145,6 +146,8 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 					No results found
 				</div>
 			)
+
+		// By default, we render a circular progress until a result has been found
 		} else {
 			return (
 				<div style={CenterDiv}>

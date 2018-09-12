@@ -1,4 +1,7 @@
+import * as qs from 'query-string';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import { Grid, IconButton } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -7,24 +10,61 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
-interface IPageNavProps {
+interface IPageNavProps extends RouteComponentProps<PageNav> {
     pageCount: number
-    updatePage: any
+    history: any
+    match: any
+}
+
+interface IPageNavStates {
+	url: any
+    qs: any // query string
     currentPage: number
 }
 
-class PageNav extends React.Component<IPageNavProps> {
+class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
 
     constructor(props: any) {
         super(props)
+
+		const parsed = qs.parse(this.props.location.search)
+
+		this.state = {
+			url: this.props.match.url,
+            qs: parsed,
+            currentPage: parseInt(parsed.page, 10)
+        }
+
+        console.log(this.state.url)
+        console.log(this.state.qs)
+
     }
+
+	// Updates the current URL with the given search parameters
+	public updatePage = (pageNumber: number) => {
+
+		const url = this.state.url;
+
+		const query = {
+			q: this.state.qs.q,
+			page: pageNumber
+		}
+
+		// Encode the query into a valid query string
+		const queryString = qs.stringify(query)
+
+        const nextPageURL: string = `${url}?${queryString}`
+        console.log(nextPageURL)
+
+		this.props.history.push(nextPageURL)
+	}
 
     // Switches to the given page number (if possible)
 	public changePage = (pageNumber: number) => {
         const pageCount = this.props.pageCount;   
         // console.log("pageNumber (PageNav)", pageNumber)
-        if (pageNumber >= 1 && pageNumber <= pageCount && pageNumber !== this.props.currentPage) {
-            this.props.updatePage(pageNumber)
+        if (pageNumber >= 1 && pageNumber <= pageCount && pageNumber !== this.state.currentPage) {
+            this.updatePage(pageNumber)
         }
         // console.log("currentPage:", this.props.currentPage)
 	}
@@ -34,7 +74,7 @@ class PageNav extends React.Component<IPageNavProps> {
     }
 
     public nextPage = () => {
-        this.changePage(this.props.currentPage + 1)
+        this.changePage(this.state.currentPage + 1)
     }
 
     public scrollToTop = () => {
@@ -42,7 +82,7 @@ class PageNav extends React.Component<IPageNavProps> {
     }
 
     public previousPage = () => {
-        this.changePage(this.props.currentPage - 1)
+        this.changePage(this.state.currentPage - 1)
     }
 
     // myanimelist will only ever return up to 20 pages in its results, so we can't actually take
@@ -53,7 +93,7 @@ class PageNav extends React.Component<IPageNavProps> {
 
     public render() {
 
-        const currentPage = this.props.currentPage;
+        const currentPage = this.state.currentPage;
         const pageCount = this.props.pageCount;
     
         const isFirstPage = currentPage === 1 ? true : false;
@@ -90,4 +130,4 @@ class PageNav extends React.Component<IPageNavProps> {
     }
 }
 
-export default PageNav
+export default withRouter(PageNav)
