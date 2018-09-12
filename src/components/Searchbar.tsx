@@ -37,8 +37,10 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	constructor(props: ISearchBarProps) {
 		super(props)
 
+		const parsed = qs.parse(this.props.location.search)
+
 		this.state = {
-			query: "",
+			query: parsed.q,
 			prevQuery: ""
 		}
 	}
