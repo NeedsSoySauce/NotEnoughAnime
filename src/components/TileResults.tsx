@@ -50,6 +50,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		console.log("Query", this.props.location.search)		
 		console.log("Query parsed", this.state.qs)
 		console.log("Params", this.state.params)
+		console.log("Path", this.props.location)
 		if (this.state.qs.q.length >= 3) {
 			return true
 		}
@@ -73,7 +74,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		const page: number = this.state.qs.page
 
 		const URL: string = `https://api.jikan.moe/v3/search/anime?q=${query}&page=${page}`
-		console.log("URL", URL)
+		// console.log("URL", URL)
 
 		fetch(URL)
 		.then((response: any) => {
