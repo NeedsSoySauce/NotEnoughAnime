@@ -59,7 +59,8 @@ export default class TileResults extends React.Component<ITileResultsProps> {
 					<SearchContext.Consumer>
 						{
 							(context: any) => {
-								return <PageNav pageCount={context.data.last_page} updatePage={context.updatePage} currentPage={context.currentPage}/>
+								return <PageNav pageCount={context.data.last_page} 
+										updatePage={context.updatePage} currentPage={context.currentPage}/>
 							}
 						}						
 					</SearchContext.Consumer>			   		

@@ -88,7 +88,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	}
 
 	public requestComplete = (data: any) => {
-		console.log("Data:", data)
+		// console.log("Data:", data)
 		this.props.setAppState(data)
 		this.props.setAPIStatus("fetched_results")      
 	}

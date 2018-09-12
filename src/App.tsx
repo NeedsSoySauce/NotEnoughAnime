@@ -37,7 +37,7 @@ export default class App extends React.Component {
 		this.setState({
 			pageNumber: page
 		},
-		() => console.log("pageNumber: ", this.state.pageNumber)
+		// () => console.log("pageNumber: ", this.state.pageNumber)
 		)
 		
 	}
@@ -52,7 +52,7 @@ export default class App extends React.Component {
 		}
 
 		return (      
-			<div className="App">
+			<div>
 				<SearchContext.Provider value={contextValues}>
 
 						<CssBaseline />

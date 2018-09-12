@@ -65,7 +65,7 @@ class PageNav extends React.Component<IPageNavProps> {
         return (
 
             <div>
-                <Grid container={true} spacing={8} justify="space-evenly">
+                <Grid container={true} spacing={8} justify="center">
                     <Grid item={true}>
                         <IconButton onClick={this.firstPage} disabled={isFirstPage}>
                             <FirstPageIcon />
