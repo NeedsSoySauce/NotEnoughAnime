@@ -1,8 +1,10 @@
+import './css/stylesheet.css';
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './css/stylesheet.css';
+
+import { AppRouter } from './AppRouter';
 import registerServiceWorker from './registerServiceWorker';
-import { AppRouter } from './router';
 
 ReactDOM.render(
   <AppRouter />,
