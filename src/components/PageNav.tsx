@@ -35,8 +35,8 @@ class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
             currentPage: parseInt(parsed.page, 10)
         }
 
-        console.log(this.state.url)
-        console.log(this.state.qs)
+        // console.log(this.state.url)
+        // console.log(this.state.qs)
 
     }
 
