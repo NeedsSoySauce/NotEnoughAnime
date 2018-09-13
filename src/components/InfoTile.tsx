@@ -23,8 +23,6 @@ interface IInfoTileStates {
     fullResult: any
 }
 
-console.log(window.screenX)
-
 const styles = (theme: any) => ({
     Grid: {
         width: "100%",
@@ -39,9 +37,10 @@ const styles = (theme: any) => ({
           },
         [theme.breakpoints.down('xs')]: {
             width: "100%",
+            maxWidth: 320,
           },
         height: "auto",
-        borderRadius: 10,
+        borderRadius: theme.shape.borderRadius,
     },
     AvatarDiv: {
         [theme.breakpoints.up('sm')]: {
@@ -52,6 +51,7 @@ const styles = (theme: any) => ({
           },
         [theme.breakpoints.down('xs')]: {
             width: "100%",
+            maxWidth: 320,
             margin: "0 auto",
             paddingBottom: theme.spacing.unit
           },
@@ -72,8 +72,6 @@ const styles = (theme: any) => ({
     },
     
 })
-
-console.log(styles)
 
 // InfoTile formats the information returned from the Jikan API into a short 
 // summary card which the user can click to expand and view more details

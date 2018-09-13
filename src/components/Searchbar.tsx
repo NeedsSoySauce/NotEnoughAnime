@@ -24,7 +24,7 @@ const styles = (theme: any) => ({
 		padding: theme.spacing.unit,
 	}, 
 	IconButton: {
-		height: "1.4em"
+		height: theme.typography.body1.lineHeight
 	},
 	Paper: {
 		cssflexDirection: "row",
