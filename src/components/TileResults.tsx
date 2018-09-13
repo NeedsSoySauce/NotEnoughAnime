@@ -10,6 +10,7 @@ import InfoTile from './InfoTile';
 import PageNav from './PageNav';
 
 import * as qs from 'query-string';
+import { isString } from 'util';
 
 interface ITileResultsProps extends RouteComponentProps<TileResults> {
 	match: any
@@ -65,24 +66,43 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	// - the page number of the results we want as "page" in the query string
 	public checkURL = () => {
 		
+		const validSearchCategories = ["anime", "manga"]
+
 		const params = this.state.params;
-		// const queryString = this.state.qs;
+		const query = this.state.qs;
+		
+		if (validSearchCategories.indexOf(params.searchCategory) > -1) {
 
-		console.log("searchCategory:", params.searchCategory)
+			// We can immediately submit a request to the API if we have the necessary query values, otherwise we can only perform a
+			// partial searach
+			console.log(isString(query.q))
+			if (isString(query.q) && this.checkInput()) {
+				return true
+			}
 
-		return true
+			this.setState({
+				status: "no_query"
+			})
+
+			return false
+
+		}
+
+		this.setState({
+			status: "invalid_url"
+		})
+
+		// Take the user back to the homepage
+		this.props.history.push("/")
+
+		return false
 	}
 
-	// When this component mounts that means the URL has changed to 
-	public componentDidMount = () => {
-		this.checkURL()
-		if (this.checkURL) {
+	// When this component mounts that means the URL has changed to /search/:searchParams
+	public componentDidMount = () => {		
+		if (this.checkURL()) {
 			this.submitRequest()	
-		} else {
-			this.setState({
-				status: "invalid_url"
-			})
-		}		
+		} 	
 	}
 
 	// Submits a request to the jikan API based on the currently selected search options and text input (from the url)
@@ -96,7 +116,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 
 		const query = {
 			q: this.state.qs.q,
-			page: this.state.qs.page
+			page: this.state.qs.page || 1
 		}
 
 		// Encode the query into a valid query string
@@ -173,6 +193,20 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			)
 
 		// By default, we render a circular progress until a result has been found
+		} else if (this.state.status === "no_query") {
+			return (
+				<div style={CenterDiv}>
+					Enter a query into the search bar
+				</div>
+			)
+
+		} else if (this.state.status === "invalid_url") {
+			return (
+				<div style={CenterDiv}>
+					Invalid URL
+				</div>
+			)
+
 		} else {
 			return (
 				<div style={CenterDiv}>
