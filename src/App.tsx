@@ -24,5 +24,3 @@ export default class App extends React.Component {
 		);
 	}
 }
-
-// Different approach, we have the searchbar in the header and TileResults renders whatever results we've found

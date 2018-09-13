@@ -19,7 +19,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
             <main>     
                 <Route component={App} />      
                 <Switch>                    
-                    <Route path='/:category/:type?' render={Result}/>
+                    <Route path='/search/:searchCategory' render={Result}/>
                     <Redirect to='/' />
                 </Switch>
             </main>

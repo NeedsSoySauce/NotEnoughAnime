@@ -64,12 +64,18 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	// - the search string as "q" in the query string
 	// - the page number of the results we want as "page" in the query string
 	public checkURL = () => {
-		// TBD - add logic
-		return
+		
+		const params = this.state.params;
+		// const queryString = this.state.qs;
+
+		console.log("searchCategory:", params.searchCategory)
+
+		return true
 	}
 
 	// When this component mounts that means the URL has changed to 
 	public componentDidMount = () => {
+		this.checkURL()
 		if (this.checkURL) {
 			this.submitRequest()	
 		} else {
@@ -86,6 +92,8 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			return
 		}
 
+		const searchCategory = this.state.params.searchCategory;
+
 		const query = {
 			q: this.state.qs.q,
 			page: this.state.qs.page
@@ -94,8 +102,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		// Encode the query into a valid query string
 		const queryString = qs.stringify(query)
 
-
-		const URL: string = `https://api.jikan.moe/v3/search/anime?${queryString}`
+		const URL: string = `https://api.jikan.moe/v3/search/${searchCategory}?${queryString}`
 		// console.log("URL", URL)
 
 		fetch(URL)
