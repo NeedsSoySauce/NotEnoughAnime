@@ -23,6 +23,8 @@ interface IInfoTileStates {
     fullResult: any
 }
 
+console.log(window.screenX)
+
 const styles = (theme: any) => ({
     Grid: {
         width: "100%",
@@ -31,19 +33,33 @@ const styles = (theme: any) => ({
         padding: theme.spacing.unit * 2,
     },
     Avatar: {
-        width: 90,
-        height: 126,
+        [theme.breakpoints.up('sm')]: {
+            width: "100%",
+            maxWidth: 150
+          },
+        [theme.breakpoints.down('xs')]: {
+            width: "100%",
+          },
+        height: "auto",
         borderRadius: 10,
     },
     AvatarDiv: {
-        width: 90,
-        height: 126,
-        cssFloat: "left",
-        marginRight: theme.spacing.unit * 2,
+        [theme.breakpoints.up('sm')]: {
+            width: "100%",
+            maxWidth: 150,
+            cssFloat: "left",
+            marginRight: theme.spacing.unit * 2,
+          },
+        [theme.breakpoints.down('xs')]: {
+            width: "100%",
+            margin: "0 auto",
+            paddingBottom: theme.spacing.unit
+          },
+        height: "auto",      
     },
     DescriptionDiv: {
         [theme.breakpoints.up('sm')]: {
-            width: "80%",
+            width: "65%",
           },
         [theme.breakpoints.down('xs')]: {
             width: "100%",
@@ -57,6 +73,7 @@ const styles = (theme: any) => ({
     
 })
 
+console.log(styles)
 
 // InfoTile formats the information returned from the Jikan API into a short 
 // summary card which the user can click to expand and view more details
@@ -234,8 +251,8 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                         </div>
                         
                         <Grid container={true} justify="center">
-                            <Button size="small" style={{justifyContent: "center"}} onClick={this.handleClick}>
-                                <Typography variant="button" color="primary">
+                            <Button size="small" onClick={this.handleClick} color="primary">
+                                <Typography variant="button" color="inherit">
                                     {isLoaded ? "Less info" : isLoading ? <CircularProgress size={30}/> : "More info"}
                                 </Typography>                      
                             </Button>                           
