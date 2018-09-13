@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
 import * as qs from 'query-string';
+import { isString } from 'util';
 
 // import SearchContext from './SearchContext';
 
@@ -38,8 +39,15 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 
 		const parsed = qs.parse(this.props.location.search)
 
-		this.state = {
-			query: parsed.q,
+		if (isString(parsed.q)) {
+			console.log("q is a string!")
+			this.state = {
+				query: parsed.q,
+			}
+		} else {
+			this.state = {
+				query: "",
+			}
 		}
 	}
 
