@@ -1,13 +1,12 @@
 import './css/stylesheet.css';
 
 import * as React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import { Route } from 'react-router-dom';
-
-import { AppBar } from '@material-ui/core/';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Searchbar from './components/Searchbar';
+import Header from './components/Header';
+import Home from './components/Home';
 
 export default class App extends React.Component {
 
@@ -15,11 +14,10 @@ export default class App extends React.Component {
 		return (      
 			<div>
 				<CssBaseline />
-				<AppBar position="sticky">
-					<Route>
-						<Searchbar key={window.location.href}/>
-					</Route>				
-				</AppBar>
+				<Switch>
+					<Route exact={true} path="/" component={Home}/>
+					<Route component={Header}/>
+				</Switch>
 			</div>
 		);
 	}

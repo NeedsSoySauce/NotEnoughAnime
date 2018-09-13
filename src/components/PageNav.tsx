@@ -54,7 +54,6 @@ class PageNav extends React.Component<IPageNavProps, IPageNavStates> {
 		const queryString = qs.stringify(query)
 
         const nextPageURL: string = `${url}?${queryString}`
-        console.log(nextPageURL)
 
 		this.props.history.push(nextPageURL)
 	}

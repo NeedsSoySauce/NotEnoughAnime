@@ -2,7 +2,6 @@ import * as React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import App from './App';
-import Home from './components/Home';
 import TileResults from './components/TileResults';
 
 // Using a key to force TileResults to remount when the URL changes
@@ -19,10 +18,10 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
         <BrowserRouter>
             <main>     
                 <App />      
-                <Switch>
-                    <Route exact={true} path='/' component={Home} />                    
+                <Switch>              
+                    <Route exact={true} path="/"/> 
                     <Route path='/search/:searchCategory' render={Result}/>
-                    <Redirect from="*" to='/' />                  
+                    <Redirect to='/' />                  
                 </Switch>
             </main>
         </BrowserRouter>
