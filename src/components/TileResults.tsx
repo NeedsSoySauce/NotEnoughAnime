@@ -150,7 +150,13 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			response.json()
 			.then((data: any) => this.requestComplete(data))
 		})      
-		.catch(err => console.log("Error:", err));
+        .catch(err => {
+            if (err.name === "AbortError") {
+                console.log("Aborted Fetch (this is not an error)")
+            } else{
+                console.error("Unexpected Error:", err)
+            }
+        });
 	}
 
 	public requestComplete = (data: any) => {

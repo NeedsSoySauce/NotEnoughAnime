@@ -62,10 +62,21 @@ const styles = (theme: any) => ({
 // summary card which the user can click to expand and view more details
 class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
 
+	// Used to abort an ongoing fetch request
+	// source: https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request
+	private controller = new AbortController();
+	private abortSignal = this.controller.signal
+
     constructor(props: IInfoTileProps) {
         super(props)
         this.state = {expanded: false, fullResult: null}
     }
+
+	// If we're waiting on a fetch request and this component has unmounted, we need to cancel that request
+	public componentWillUnmount = () => {
+		// console.log("Aborting fetch request")
+		this.controller.abort()
+	}
 
     // Submits a request to the jikan API to get detailed information about the selected anime
     // We only do this when the user wants more info as we don't want to make too many requests
@@ -74,7 +85,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
         const URL: string = `https://api.jikan.moe/v3/anime/${this.props.result.mal_id}`
 
         // Alternate fetch version
-        fetch(URL)
+        fetch(URL, {signal: this.abortSignal})
         .then((response: any) => {
             if (response.status !== 200) {
                 return
@@ -82,7 +93,13 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
             response.json()
             .then((data: any) => this.requestComplete(data))
         })      
-        .catch(err => console.log("Error:", err));
+        .catch(err => {
+            if (err.name === "AbortError") {
+                console.log("Aborted Fetch (this is not an error)")
+            } else{
+                console.error("Unexpected Error:", err)
+            }
+        });
     }
 
     public requestComplete = (data: any) => {
