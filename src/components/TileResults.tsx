@@ -12,6 +12,7 @@ import PageNav from './PageNav';
 import * as qs from 'query-string';
 import { isString } from 'util';
 
+
 interface ITileResultsProps extends RouteComponentProps<TileResults> {
 	match: any
 }
@@ -31,6 +32,11 @@ const CenterDiv = {
 }
 
 export class TileResults extends React.Component<ITileResultsProps, ITileResultsStates> {
+
+	// Used to abort an ongoing fetch request
+	// source: https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request
+	private controller = new AbortController();
+	private abortSignal = this.controller.signal
 
 	constructor(props: ITileResultsProps) {
 		super(props)
@@ -75,7 +81,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 
 			// We can immediately submit a request to the API if we have the necessary query values, otherwise we can only perform a
 			// partial searach
-			console.log(isString(query.q))
+			
 			if (isString(query.q) && this.checkInput()) {
 				return true
 			}
@@ -93,7 +99,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		})
 
 		// Take the user back to the homepage
-		this.props.history.push("/")
+		this.props.history.push("")
 
 		return false
 	}
@@ -103,6 +109,12 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		if (this.checkURL()) {
 			this.submitRequest()	
 		} 	
+	}
+
+	// If we're waiting on a fetch request and this component has unmounted, we need to cancel that request
+	public componentWillUnmount = () => {
+		// console.log("Aborting fetch request")
+		this.controller.abort()
 	}
 
 	// Submits a request to the jikan API based on the currently selected search options and text input (from the url)
@@ -119,13 +131,15 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 			page: this.state.qs.page || 1
 		}
 
+		document.title = "Search: " + query.q
+
 		// Encode the query into a valid query string
 		const queryString = qs.stringify(query)
 
 		const URL: string = `https://api.jikan.moe/v3/search/${searchCategory}?${queryString}`
 		// console.log("URL", URL)
 
-		fetch(URL)
+		fetch(URL, {signal: this.abortSignal})
 		.then((response: any) => {
 			if (response.status !== 200) {
 				this.setState({

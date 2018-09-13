@@ -17,7 +17,7 @@ export default class App extends React.Component {
 				<CssBaseline />
 				<AppBar position="sticky">
 					<Route>
-						<Searchbar/>
+						<Searchbar key={window.location.href}/>
 					</Route>				
 				</AppBar>
 			</div>

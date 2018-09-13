@@ -11,6 +11,7 @@ const Result = () => {
     )
 }
 
+
 export const AppRouter: React.StatelessComponent<{}> = () => {
 
     return (
@@ -20,7 +21,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
                 <Route component={App} />      
                 <Switch>                    
                     <Route path='/search/:searchCategory' render={Result}/>
-                    <Redirect to='/' />
+                    <Redirect exact={true} to='/' />                  
                 </Switch>
             </main>
         </BrowserRouter>

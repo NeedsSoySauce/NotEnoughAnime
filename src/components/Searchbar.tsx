@@ -40,7 +40,6 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		const parsed = qs.parse(this.props.location.search)
 
 		if (isString(parsed.q)) {
-			console.log("q is a string!")
 			this.state = {
 				query: parsed.q,
 			}
