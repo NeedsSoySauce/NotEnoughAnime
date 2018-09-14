@@ -15,8 +15,6 @@ interface IHeaderProps {
     theme: any
 }
 
-
-
 export class Header extends React.Component<IHeaderProps> {
 
     private ContentOffset = parseFloat(this.props.theme.typography.body1.fontSize.slice(0, -3)) * this.props.theme.typography.fontSize 

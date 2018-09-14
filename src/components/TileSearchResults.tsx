@@ -1,23 +1,22 @@
+import * as qs from 'query-string';
 import * as React from 'react';
-
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
+import { isString } from 'util';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import InfoTile from './InfoTile';
 import PageNav from './PageNav';
 
-import * as qs from 'query-string';
-import { isString } from 'util';
-
-
-interface ITileResultsProps extends RouteComponentProps<TileResults> {
+interface ITileSearchResultsProps extends RouteComponentProps<TileSearchResults> {
 	match: any
+	key: any
 }
 
-interface ITileResultsStates {
+interface ITileSearchResultsStates {
 	status: any
 	response: any // data returned by the API
 	params: any
@@ -28,17 +27,18 @@ const CenterDiv = {
 	display: "flex", 
 	justifyContent: "center", 
 	alignItems: "center", 
-	marginTop: "33vh"
+	marginTop: "33vh",
 }
 
-export class TileResults extends React.Component<ITileResultsProps, ITileResultsStates> {
+
+export class TileSearchResults extends React.Component<ITileSearchResultsProps, ITileSearchResultsStates> {
 
 	// Used to abort an ongoing fetch request
 	// source: https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request
 	private controller = new AbortController();
 	private abortSignal = this.controller.signal
 
-	constructor(props: ITileResultsProps) {
+	constructor(props: ITileSearchResultsProps) {
 		super(props)
 
 		const parsed = qs.parse(this.props.location.search)
@@ -58,6 +58,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		// console.log("Query parsed", this.state.qs)
 		// console.log("Params", this.state.params)
 		// console.log("Location", window.location.href)
+
 		if (this.state.qs.q.length >= 3) {
 			return true
 		}
@@ -111,6 +112,8 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		} 	
 	}
 
+
+
 	// If we're waiting on a fetch request and this component has unmounted, we need to cancel that request
 	public componentWillUnmount = () => {
 		// console.log("Aborting fetch request")
@@ -128,13 +131,15 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 
 		const query = {
 			q: this.state.qs.q,
-			page: this.state.qs.page || 1
+			page: this.state.qs.page || 1,
 		}
 
 		document.title = "Search: " + query.q
 
 		// Encode the query into a valid query string
 		const queryString = qs.stringify(query)
+
+		// console.log(queryString)
 
 		const URL: string = `https://api.jikan.moe/v3/search/${searchCategory}?${queryString}`
 		// console.log("URL", URL)
@@ -160,7 +165,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	}
 
 	public requestComplete = (data: any) => {
-		// console.log("Data:", data)
+		console.log("Data:", data)
 		this.setState({
 			status: "fetched_results",
 			response: data
@@ -172,6 +177,12 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		const tiles: any = [];
 
 		this.state.response.results.forEach((element: any) => {
+
+			// myanimelist also lists more adult-oriented content using the rating "rx". I don't want this stuff to show up.
+			if (element.rated === "Rx") {
+				return
+			}
+
 			tiles.push(
 				<InfoTile key={element.mal_id} result={element}/>
 			)
@@ -208,22 +219,30 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		} else if (this.state.status === "fetched_no_results") {
 			return (
 				<div style={CenterDiv}>
-					No results found
+					<Typography variant="display3" align="center">	
+						No results found
+					</Typography>
 				</div>
+						
+				
 			)
 
 		// By default, we render a circular progress until a result has been found
 		} else if (this.state.status === "no_query") {
 			return (
-				<div style={CenterDiv}>
-					Enter a query into the search bar
+				<div style={CenterDiv}>				
+					<Typography variant="display3" align="center">	
+						Enter a query into the search bar
+					</Typography>
 				</div>
 			)
 
 		} else if (this.state.status === "invalid_url") {
 			return (
-				<div style={CenterDiv}>
-					Invalid URL
+				<div style={CenterDiv}>			
+					<Typography variant="display3" align="center">	
+						Invalid URL
+					</Typography>
 				</div>
 			)
 
@@ -238,4 +257,4 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 	}
 }
 
-export default withRouter(TileResults)
+export default withRouter(TileSearchResults)

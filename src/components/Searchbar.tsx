@@ -118,18 +118,20 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 								</IconButton>
 							</Grid>
 							
-							<Grid item={true}>                     
-								<TextField
-									InputProps={{
-										disableUnderline: true
-									}}
-									autoFocus={true} 
-									placeholder="Search"
-									value={this.state.query}
-									onKeyDown={this.handleKeyDown}
-									onChange={this.handleChange}
-									className={classes.TextField}
-								/>   						
+							<Grid item={true}>     
+								<div>           
+									<TextField
+										InputProps={{
+											disableUnderline: true
+										}}
+										autoFocus={true} 
+										placeholder="Search"
+										value={this.state.query}
+										onKeyDown={this.handleKeyDown}
+										onChange={this.handleChange}
+										className={classes.TextField}
+									/>   	
+								</div>     					
 							</Grid>					
 						</Grid>
 					</Paper>

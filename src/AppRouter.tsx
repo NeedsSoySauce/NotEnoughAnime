@@ -5,7 +5,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import App from './App';
-import TileResults from './components/TileResults';
+import Home from './components/Home';
+import TileSearchResults from './components/TileSearchResults';
 
 const muiTheme = createMuiTheme({
 			palette: {
@@ -21,7 +22,7 @@ const muiTheme = createMuiTheme({
 // Using a key to force TileResults to remount when the URL changes
 const Result = () => {
 	return (
-		<TileResults key={window.location.href} />
+		<TileSearchResults key={window.location.href} />
 	)
 }
 
@@ -34,7 +35,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 				<main>     
 					<App />      
 					<Switch>              
-						<Route exact={true} path="/"/> 
+						<Route exact={true} path="/" component={Home}/> 
 						<Route path='/search/:searchCategory' render={Result}/>
 						<Redirect to='/'/>                  
 					</Switch>

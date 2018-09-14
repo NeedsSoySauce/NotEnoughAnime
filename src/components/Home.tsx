@@ -1,14 +1,15 @@
 import * as React from 'react';
+import TileScheduleResults from './TileScheduleResults';
 
-// The home page is just a larger search box. Nothing special.
-import Searchbar from './Searchbar';
-
+// The home page renders results that shows anime that are currently airing
 class Home extends React.Component<{}> {
 
     public render() {
         return (
-            <Searchbar key={window.location.href}/>
-        )
+            <div>
+                <TileScheduleResults day="monday" key={window.location.href} />
+            </div>
+        ) 
     }
 }
 

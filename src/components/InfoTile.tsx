@@ -194,7 +194,11 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                             </Typography>      
 
                             <Typography variant="body1">
-                                {isLoaded ? fullResult.synopsis : result.synopsis}                
+                                {/* 
+                                myanimelist truncates descriptions with a length > 200 using an elipsis - but this is only for search requests. 
+                                To ensure consistency across all results we do the same to any synopsis returned here.                     
+                                */}
+                                {isLoaded ? fullResult.synopsis : result.synopsis.length > 200 ? result.synopsis.substring(0, 199) + "..." : result.synopsis}                
                             </Typography>     
                             
                             {this.getGenres()}
@@ -206,7 +210,7 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                                         <ListItem disableGutters={true}>
                                             <ListItemText
                                                 primary="Episodes"
-                                                secondary={fullResult.episodes}  
+                                                secondary={fullResult.episodes || "Unknown"}  
                                             />
                                         </ListItem>
                                     </List>
