@@ -36,7 +36,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
 					<Switch>              
 						<Route exact={true} path="/"/> 
 						<Route path='/search/:searchCategory' render={Result}/>
-						<Redirect to='/' />                  
+						<Redirect to='/'/>                  
 					</Switch>
 				</main>
 			</BrowserRouter>

@@ -99,7 +99,7 @@ export class TileResults extends React.Component<ITileResultsProps, ITileResults
 		})
 
 		// Take the user back to the homepage
-		this.props.history.push("")
+		this.props.history.replace("")
 
 		return false
 	}
