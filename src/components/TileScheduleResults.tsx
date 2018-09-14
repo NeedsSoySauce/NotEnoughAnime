@@ -1,14 +1,11 @@
 import * as React from 'react';
-
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
-import InfoTile from './InfoTile';
-import PageNav from './PageNav';
+import ScheduleInfoTile from './ScheduleInfoTile';
 
 interface ITileScheduleResultsProps extends RouteComponentProps<TileScheduleResults> {
 	match: any
@@ -98,14 +95,54 @@ export class TileScheduleResults extends React.Component<ITileScheduleResultsPro
 		}) 
 	}
 
+	// public createTiles = () => {
+
+	// 	// console.log("Data", this.state.response)
+
+	// 	const tiles: any = [];
+
+	// 	this.days.forEach((day: any) => {
+	// 		console.log(day, this.state.response[day])
+
+	// 		this.state.response[day].forEach((element: any) => {
+
+	// 			// Filter out results tagged as "adult"
+	// 			if (element.r18) {
+	// 				return;
+	// 			}
+
+	// 			tiles.push(
+	// 				<ScheduleInfoTile key={element.mal_id} result={element}/>
+	// 			)
+	// 		});
+	// 	});
+
+	// 	return (
+	// 		<Grid container={true} 
+	// 			spacing={16} 
+	// 			direction="column" 
+	// 			justify="center" 
+	// 			alignItems="center" 
+	// 			style={{paddingTop: 16}}
+	// 		>               
+	// 			{tiles}
+	// 		</Grid>         
+	// 	)
+	// }
+
 	public createTiles = () => {
 
 		// console.log("Data", this.state.response)
 
 		const tiles: any = [];
+		let days = this.days;
 
-		this.days.forEach((day: any) => {
-			console.log(day, this.state.response[day])
+		if (this.props.day !== undefined) {
+			days = [this.props.day];
+		}
+
+		days.forEach((day: any) => {
+			// console.log(day, this.state.response[day])
 
 			this.state.response[day].forEach((element: any) => {
 
@@ -115,16 +152,10 @@ export class TileScheduleResults extends React.Component<ITileScheduleResultsPro
 				}
 
 				tiles.push(
-					<InfoTile key={element.mal_id} result={element}/>
+					<ScheduleInfoTile key={element.mal_id} result={element}/>
 				)
 			});
 		});
-
-		// this.state.response.results.forEach((element: any) => {
-		// 	tiles.push(
-		// 		<InfoTile key={element.mal_id} result={element}/>
-		// 	)
-		// });
 
 		return (
 			<Grid container={true} 
@@ -141,47 +172,12 @@ export class TileScheduleResults extends React.Component<ITileScheduleResultsPro
 
 	public render() {
 		
-		const response = this.state.response;
-		
 		// If any results are found, we display them as vertical tiles
 		if (this.state.status === "fetched_results") {
 			return (
 				<div>
-					{this.createTiles()}
-					<PageNav 
-						pageCount={response.last_page} 
-					/>		   		
+					{this.createTiles()}  		
 				</div>			   
-			)
-
-		} else if (this.state.status === "fetched_no_results") {
-			return (
-				<div style={CenterDiv}>
-					<Typography variant="display3" align="center">	
-						No results found
-					</Typography>
-				</div>
-						
-				
-			)
-
-		// By default, we render a circular progress until a result has been found
-		} else if (this.state.status === "no_query") {
-			return (
-				<div style={CenterDiv}>				
-					<Typography variant="display3" align="center">	
-						Enter a query into the search bar
-					</Typography>
-				</div>
-			)
-
-		} else if (this.state.status === "invalid_url") {
-			return (
-				<div style={CenterDiv}>			
-					<Typography variant="display3" align="center">	
-						Invalid URL
-					</Typography>
-				</div>
 			)
 
 		} else {

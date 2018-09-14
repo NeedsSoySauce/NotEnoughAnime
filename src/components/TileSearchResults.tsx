@@ -8,8 +8,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import InfoTile from './InfoTile';
 import PageNav from './PageNav';
+import SearchInfoTile from './SearchInfoTile';
 
 interface ITileSearchResultsProps extends RouteComponentProps<TileSearchResults> {
 	match: any
@@ -184,7 +184,7 @@ export class TileSearchResults extends React.Component<ITileSearchResultsProps, 
 			}
 
 			tiles.push(
-				<InfoTile key={element.mal_id} result={element}/>
+				<SearchInfoTile key={element.mal_id} result={element}/>
 			)
 		});
 

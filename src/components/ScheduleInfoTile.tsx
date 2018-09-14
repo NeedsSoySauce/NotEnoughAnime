@@ -11,14 +11,14 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import withWidth from '@material-ui/core/withWidth';
 
-interface IInfoTileProps {
+interface IScheduleInfoTileProps {
     key: any
     result: any
     width: any
     classes: any
 }
 
-interface IInfoTileStates {
+interface IScheduleInfoTileStates {
     expanded: boolean
     fullResult: any
 }
@@ -33,11 +33,11 @@ const styles = (theme: any) => ({
     Avatar: {
         [theme.breakpoints.up('sm')]: {
             width: "100%",
-            maxWidth: 150
+            maxWidth: 75
           },
         [theme.breakpoints.down('xs')]: {
             width: "100%",
-            maxWidth: 320,
+            maxWidth: 160,
           },
         height: "auto",
         borderRadius: theme.shape.borderRadius,
@@ -45,13 +45,13 @@ const styles = (theme: any) => ({
     AvatarDiv: {
         [theme.breakpoints.up('sm')]: {
             width: "100%",
-            maxWidth: 150,
+            maxWidth: 75,
             cssFloat: "left",
             marginRight: theme.spacing.unit * 2,
           },
         [theme.breakpoints.down('xs')]: {
             width: "100%",
-            maxWidth: 320,
+            maxWidth: 160,
             margin: "0 auto",
             paddingBottom: theme.spacing.unit
           },
@@ -73,16 +73,16 @@ const styles = (theme: any) => ({
     
 })
 
-// InfoTile formats the information returned from the Jikan API into a short 
+// ScheduleInfoTile formats the information returned from the Jikan API into a short 
 // summary card which the user can click to expand and view more details
-class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
+class ScheduleInfoTile extends React.Component<IScheduleInfoTileProps, IScheduleInfoTileStates> {
 
 	// Used to abort an ongoing fetch request
 	// source: https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request
 	private controller = new AbortController();
 	private abortSignal = this.controller.signal
 
-    constructor(props: IInfoTileProps) {
+    constructor(props: IScheduleInfoTileProps) {
         super(props)
         this.state = {expanded: false, fullResult: null}
     }
@@ -189,16 +189,12 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
                         </div>                  
                         
                         <div className={classes.DescriptionDiv}>
-                            <Typography variant="headline" className={classes.Title}>
+                            <Typography variant="subheading" className={classes.Title}>
                                 {result.title}
                             </Typography>      
 
-                            <Typography variant="body1">
-                                {/* 
-                                myanimelist truncates descriptions with a length > 200 using an elipsis - but this is only for search requests. 
-                                To ensure consistency across all results we do the same to any synopsis returned here.                     
-                                */}
-                                {isLoaded ? fullResult.synopsis : result.synopsis.length > 200 ? result.synopsis.substring(0, 199) + "..." : result.synopsis}                
+                            <Typography variant="body2">
+                                {isLoaded ? fullResult.synopsis : result.synopsis.length > 100 ? result.synopsis.substring(0, 99) + "..." : result.synopsis}                
                             </Typography>     
                             
                             {this.getGenres()}
@@ -267,4 +263,4 @@ class InfoTile extends React.Component<IInfoTileProps, IInfoTileStates> {
     }
 }
 
-export default withStyles(styles)(withWidth()(InfoTile))
+export default withStyles(styles)(withWidth()(ScheduleInfoTile))
