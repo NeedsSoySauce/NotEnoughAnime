@@ -1,4 +1,4 @@
-###### This project was built for phase 1 of the Microsoft Student Accelerator programme, it's also my first journey into web development!
+## This project was built for phase 1 of the Microsoft Student Accelerator programme, it's also my first journey into web development!
 
 The requirements of the project were to: 
 
@@ -10,7 +10,7 @@ The requirements of the project were to:
 - Use Azure Web App for Containers to deploy our docker image
 - Use Github for source control
 
-###### This submission
+## This submission
 
 This submission is a web-app that searches for anime on myanimelist.net via the jikan REST API. As this was my first time doing anything on the web, I tried to keep things simple as I would be learning a lot of different things at the same time.
 
