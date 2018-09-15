@@ -59,7 +59,7 @@ export class TileSearchResults extends React.Component<ITileSearchResultsProps, 
 		// console.log("Params", this.state.params)
 		// console.log("Location", window.location.href)
 
-		if (this.state.qs.q.length >= 3) {
+		if (this.state.qs.q.trim().length >= 3) {
 			return true
 		}
 		return false 

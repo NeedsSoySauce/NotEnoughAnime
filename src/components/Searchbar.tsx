@@ -1,13 +1,14 @@
+import * as qs from 'query-string';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
+import { isString } from 'util';
 
 import { Grid, IconButton, Paper, TextField } from '@material-ui/core/';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
-
-import * as qs from 'query-string';
-import { isString } from 'util';
 
 // import SearchContext from './SearchContext';
 
@@ -17,6 +18,7 @@ interface ISearchBarProps extends RouteComponentProps<Searchbar>{
 
 interface ISearchBarState {         
 	query: "",
+	open: boolean,
 }
 
 const styles = (theme: any) => ({
@@ -42,10 +44,12 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		if (isString(parsed.q)) {
 			this.state = {
 				query: parsed.q,
+				open: false,
 			}
 		} else {
 			this.state = {
 				query: "",
+				open: false
 			}
 		}
 	}
@@ -53,9 +57,10 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	// Searches to myanimelist via the jikan API must be at least 3 characters long, so this just returns true or false
 	// depending on whether the text input is long enough 
 	public checkInput = () => {
-		if (this.state.query.length >= 3) {
+		if (this.state.query.trim().length >= 3) {
 			return true
 		}
+		this.openTooltip()
 		return false 
 	}
 
@@ -70,7 +75,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		const type: string = "anime"
 
 		const query = {
-			q: this.state.query,
+			q: this.state.query.trim(),
 			page: 1
 		}
 
@@ -80,6 +85,18 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 		const URL: string = `/search/${type}/?${queryString}`
 
 		this.props.history.push(URL)
+	}
+
+	public openTooltip = () => {
+		this.setState({
+			open: true
+		})
+	}
+
+	public closeTooltip = () => {
+		this.setState({
+			open: false
+		})
 	}
 
 	// Triggers any time the user presses a key down in the searchbar
@@ -110,30 +127,50 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 			<div className={classes.SearchbarDiv}>   
 				<Grid container={true} justify="center">
 					<Paper className={classes.Paper}>
-						<Grid container={true} alignItems="flex-end">
-							
-							<Grid item={true}>
-								<IconButton onClick={this.handleClick} className={classes.IconButton}>
-									<SearchIcon />
-								</IconButton>
-							</Grid>
-							
-							<Grid item={true}>     
-								<div>           
-									<TextField
-										InputProps={{
-											disableUnderline: true
-										}}
-										autoFocus={true} 
-										placeholder="Search"
-										value={this.state.query}
-										onKeyDown={this.handleKeyDown}
-										onChange={this.handleChange}
-										className={classes.TextField}
-									/>   	
-								</div>     					
-							</Grid>					
-						</Grid>
+
+						<ClickAwayListener onClickAway={this.closeTooltip}>
+							<div>
+								<Tooltip
+								PopperProps={{
+									disablePortal: true,
+								}}
+								onClose={this.closeTooltip}
+								open={this.state.open}
+								disableFocusListener={true}
+								disableHoverListener={true}
+								disableTouchListener={true}
+								title="Searches must contain at least 3 characters (not including leading and trailing whitespace)"
+								>
+
+								<Grid container={true} alignItems="flex-end">
+									
+									<Grid item={true}>
+										<IconButton onClick={this.handleClick} className={classes.IconButton}>
+											<SearchIcon />
+										</IconButton>
+									</Grid>
+									
+									<Grid item={true}>     
+										<div>           
+											<TextField
+												InputProps={{
+													disableUnderline: true
+												}}
+												autoFocus={true} 
+												placeholder="Search"
+												value={this.state.query}
+												onKeyDown={this.handleKeyDown}
+												onChange={this.handleChange}
+												className={classes.TextField}
+											/>   	
+										</div>     				
+									</Grid>					
+								</Grid>
+
+								</Tooltip>
+							</div>
+						</ClickAwayListener>	
+						
 					</Paper>
 				</Grid>
 			</div>
