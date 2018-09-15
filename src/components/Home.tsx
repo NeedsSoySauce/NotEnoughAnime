@@ -21,6 +21,10 @@ class Home extends React.Component<IHomeProps> {
 		})
 	}
 
+    public componentWillMount = () => {
+        document.title = "NotEnoughAnime"
+    }
+
     public render() {
 
         const value = this.state.value;
