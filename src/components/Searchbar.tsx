@@ -26,6 +26,7 @@ const styles = (theme: any) => ({
 		padding: theme.spacing.unit,
 	}, 
 	IconButton: {
+		width: theme.typography.body1.lineHeight,
 		height: theme.typography.body1.lineHeight
 	},
 	Paper: {
