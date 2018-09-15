@@ -24,6 +24,7 @@ class Home extends React.Component<IHomeProps> {
     public render() {
 
         const value = this.state.value;
+        const width = this.props.width;
 
         return (
             <div>
@@ -34,9 +35,9 @@ class Home extends React.Component<IHomeProps> {
                     <Tabs 
                         value={value} 
                         onChange={this.handleChange} 
-                        // centered={true} 
-                        fullWidth={true}
-                        scrollable={true}
+                        centered={width === "xs" ? false : true} 
+                        fullWidth={width === "xs" ? true : false}
+                        scrollable={width === "xs" ? true : false}
                         scrollButtons="on"
                     >
                         <Tab label="Mon"/>

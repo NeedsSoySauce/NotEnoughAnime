@@ -31,7 +31,10 @@ const styles = (theme: any) => ({
 	},
 	Paper: {
 		cssflexDirection: "row",
-	},
+	}, 
+	Tooltip: {
+		marginTop: theme.spacing.unit,
+	}
 
 })
 
@@ -141,6 +144,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 								disableHoverListener={true}
 								disableTouchListener={true}
 								title="Searches must contain at least 3 characters (not including leading and trailing whitespace)"
+								classes={{tooltip: classes.Tooltip}}
 								>
 
 								<Grid container={true} alignItems="flex-end">
@@ -158,7 +162,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 													disableUnderline: true
 												}}
 												autoFocus={true} 
-												placeholder="Search"
+												placeholder="Search for anime"
 												value={this.state.query}
 												onKeyDown={this.handleKeyDown}
 												onChange={this.handleChange}
