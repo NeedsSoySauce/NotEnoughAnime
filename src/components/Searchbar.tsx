@@ -72,7 +72,7 @@ class Searchbar extends React.Component<ISearchBarProps, ISearchBarState> {
 	public updateURL = () => {
 
 		if (!this.checkInput()) {
-			console.log("Search query length < 3 characters")
+			// console.log("Search query length < 3 characters")
 			return
 		}
 

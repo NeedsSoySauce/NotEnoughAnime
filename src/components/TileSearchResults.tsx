@@ -165,7 +165,7 @@ export class TileSearchResults extends React.Component<ITileSearchResultsProps, 
 	}
 
 	public requestComplete = (data: any) => {
-		console.log("Data:", data)
+		// console.log("Data:", data)
 		this.setState({
 			status: "fetched_results",
 			response: data
